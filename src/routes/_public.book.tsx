@@ -30,6 +30,8 @@ function BookPage() {
   const [time, setTime] = useState<string | null>(null);
   const [booked, setBooked] = useState<string[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [blockedDays, setBlockedDays] = useState<Date[]>([]);
+  useEffect(() => { void supabase.rpc("get_blocked_days").then(({ data }) => setBlockedDays(((data as string[] | null) ?? []).map((d) => new Date(`${d}T00:00:00`)))); }, []);
   const [details, setDetails] = useState<Details>(emptyDetails);
   const [errors, setErrors] = useState<Partial<Record<keyof Details, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -113,7 +115,7 @@ function BookPage() {
         <p className="mt-1 text-sm text-muted-foreground">Open Monday–Saturday. Closed on Sundays.</p>
         <div className="mt-5 grid gap-8 md:grid-cols-[auto_1fr]">
           <Calendar mode="single" selected={date} onSelect={(d) => { setDate(d); setTime(null); }}
-            disabled={[{ before: today }, { after: addDays(today, 90) }, { dayOfWeek: [0] }]}
+            disabled={[{ before: today }, { after: addDays(today, 90) }, { dayOfWeek: [0] }, ...blockedDays]}
             className="w-fit rounded-md border border-border bg-card" />
           <div>
             {!date ? <p className="text-sm text-muted-foreground">Select a date to see available times.</p>
