@@ -130,7 +130,7 @@ function Details({ booking: b, creds, notice, onChanged, onReset }: { booking: B
     {b.status !== "cancelled" && b.status !== "no_show" && <div className="rounded-md border border-border bg-card p-5">
       <p className="font-display text-lg font-semibold">Garment progress</p>
       <p className="mt-1 text-sm text-muted-foreground">Current stage: <span className="font-medium text-foreground">{stageLabel(b.production_stage)}</span></p>
-      <StageStepper stage={b.production_stage} className="mt-4" />
+      <StageStepper stage={b.production_stage} service={b.service_type} className="mt-4" />
       {b.production_stage === "fitting_ready" && <p className="mt-4 border-l-2 border-accent bg-surface p-3 text-sm">Your outfit is ready for a fitting! We look forward to seeing you at our Badagry studio.</p>}
       {b.production_stage === "completed" && <p className="mt-4 border-l-2 border-accent bg-surface p-3 text-sm">Your order is completed and ready for pickup or delivery across Lagos.</p>}
     </div>}

@@ -1,21 +1,23 @@
 import { MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppointmentStatusBadge } from "@/components/ui/appointment-status";
-import { EventUrgencyBadge, STAGES, StageStepper, stageIndex } from "@/components/production";
+import { EventUrgencyBadge, StageStepper, stagesFor } from "@/components/production";
 import { serviceTitle, formatTime } from "@/lib/booking";
 import { badgeStatus, lagosToday, prettyDate, useSetStage, useSetStatus, whatsappLink, type DbStatus, type OwnerAppointment } from "@/lib/owner";
 
 const nextActions: Partial<Record<DbStatus, { status: DbStatus; label: string; variant?: "outline" }[]>> = {
   pending: [{ status: "confirmed", label: "Confirm appointment" }, { status: "cancelled", label: "Decline / Cancel", variant: "outline" }],
   confirmed: [{ status: "completed", label: "Mark completed" }, { status: "no_show", label: "No-show", variant: "outline" }, { status: "cancelled", label: "Cancel", variant: "outline" }],
+  rescheduled: [{ status: "confirmed", label: "Confirm new time" }, { status: "completed", label: "Mark completed", variant: "outline" }, { status: "cancelled", label: "Cancel", variant: "outline" }],
 };
 
 export function OwnerAppointmentCard({ a, compact = false }: { a: OwnerAppointment; compact?: boolean }) {
   const setStatus = useSetStatus();
   const setStage = useSetStage();
   const c = a.customers;
-  const idx = stageIndex(a.production_stage);
-  const next = STAGES[idx + 1];
+  const list = stagesFor(a.service_type);
+  const idx = Math.max(0, list.findIndex((s) => s.id === a.production_stage));
+  const next = list[idx + 1];
   const showStage = a.status !== "cancelled" && a.status !== "no_show";
   return <article className="border border-border bg-card p-5">
     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -36,13 +38,13 @@ export function OwnerAppointmentCard({ a, compact = false }: { a: OwnerAppointme
         <p className="text-xs uppercase tracking-widest text-muted-foreground">Production stage</p>
         <div className="flex flex-wrap items-center gap-2">
           <label className="sr-only" htmlFor={`stage-${a.id}`}>Set production stage</label>
-          <select id={`stage-${a.id}`} value={STAGES[idx]!.id} disabled={setStage.isPending} onChange={(e) => setStage.mutate({ id: a.id, stage: e.target.value })} className="min-h-9 rounded-sm border border-input bg-background px-2 text-sm">
-            {STAGES.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+          <select id={`stage-${a.id}`} value={list[idx]!.id} disabled={setStage.isPending} onChange={(e) => setStage.mutate({ id: a.id, stage: e.target.value })} className="min-h-9 rounded-sm border border-input bg-background px-2 text-sm">
+            {list.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
           </select>
           {next && <Button size="sm" variant="outline" disabled={setStage.isPending} onClick={() => setStage.mutate({ id: a.id, stage: next.id })}>Advance Stage →</Button>}
         </div>
       </div>
-      <StageStepper stage={a.production_stage} className="mt-3" />
+      <StageStepper stage={a.production_stage} service={a.service_type} className="mt-3" />
       {setStage.isError && <p className="mt-2 text-sm text-destructive">Couldn't update the stage. Please try again.</p>}
     </div>}
     {nextActions[a.status] && <div className="mt-5 flex flex-wrap gap-2">{nextActions[a.status]!.map((n) => <Button key={n.status} size="sm" variant={n.variant} disabled={setStatus.isPending} onClick={() => setStatus.mutate({ id: a.id, status: n.status })}>{n.label}</Button>)}</div>}
