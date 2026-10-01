@@ -5,7 +5,7 @@
 - [x] Verify route rendering and responsive layouts.
 
 # Stage 1 visual refinement
-- [ ] Keep the full-width photo hero; soften its overlay and remove the colored wordmark period.
-- [ ] Keep the three homepage categories; remove numbering, arrows, and rigid tile framing.
-- [ ] Remove the homepage location icon and use editorial text and subtle dividers.
-- [ ] Check the homepage across screen sizes without changing routes or owner workflows.
+- [x] Keep the full-width photo hero; soften its overlay and remove the colored wordmark period.
+- [x] Keep the three homepage categories; remove numbering, arrows, and rigid tile framing.
+- [x] Remove the homepage location icon and use editorial text and subtle dividers.
+- [x] Check the homepage across screen sizes without changing routes or owner workflows.
