@@ -29,6 +29,7 @@ export type Database = {
           payment_status: string
           production_stage: string
           reference: string
+          reminder_sent_at: string | null
           service_type: string
           status: string
         }
@@ -46,6 +47,7 @@ export type Database = {
           payment_status?: string
           production_stage?: string
           reference: string
+          reminder_sent_at?: string | null
           service_type: string
           status?: string
         }
@@ -63,6 +65,7 @@ export type Database = {
           payment_status?: string
           production_stage?: string
           reference?: string
+          reminder_sent_at?: string | null
           service_type?: string
           status?: string
         }
