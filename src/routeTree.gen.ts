@@ -15,6 +15,8 @@ import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
 import { Route as PublicBookRouteImport } from './routes/_public.book'
 import { Route as PublicClothingRouteImport } from './routes/_public.clothing'
+import { Route as PublicManageBookingRouteImport } from './routes/_public.manage-booking'
+import { Route as PublicMyBookingRouteImport } from './routes/_public.my-booking'
 import { Route as OwnerIndexRouteImport } from './routes/owner.index'
 import { Route as OwnerAppointmentsRouteImport } from './routes/owner.appointments'
 import { Route as OwnerAvailabilityRouteImport } from './routes/owner.availability'
@@ -49,6 +51,16 @@ const PublicClothingRoute = PublicClothingRouteImport.update({
   path: '/clothing',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicManageBookingRoute = PublicManageBookingRouteImport.update({
+  id: '/manage-booking',
+  path: '/manage-booking',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicMyBookingRoute = PublicMyBookingRouteImport.update({
+  id: '/my-booking',
+  path: '/my-booking',
+  getParentRoute: () => PublicRoute,
+} as any)
 const OwnerIndexRoute = OwnerIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -76,6 +88,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof PublicAboutRoute
   '/book': typeof PublicBookRoute
   '/clothing': typeof PublicClothingRoute
+  '/manage-booking': typeof PublicManageBookingRoute
+  '/my-booking': typeof PublicMyBookingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
   '/owner/availability': typeof OwnerAvailabilityRoute
   '/owner/login': typeof OwnerLoginRoute
@@ -85,6 +99,8 @@ export interface FileRoutesByTo {
   '/about': typeof PublicAboutRoute
   '/book': typeof PublicBookRoute
   '/clothing': typeof PublicClothingRoute
+  '/manage-booking': typeof PublicManageBookingRoute
+  '/my-booking': typeof PublicMyBookingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
   '/owner/availability': typeof OwnerAvailabilityRoute
   '/owner/login': typeof OwnerLoginRoute
@@ -98,6 +114,8 @@ export interface FileRoutesById {
   '/_public/about': typeof PublicAboutRoute
   '/_public/book': typeof PublicBookRoute
   '/_public/clothing': typeof PublicClothingRoute
+  '/_public/manage-booking': typeof PublicManageBookingRoute
+  '/_public/my-booking': typeof PublicMyBookingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
   '/owner/availability': typeof OwnerAvailabilityRoute
   '/owner_/login': typeof OwnerLoginRoute
@@ -112,6 +130,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/book'
     | '/clothing'
+    | '/manage-booking'
+    | '/my-booking'
     | '/owner/appointments'
     | '/owner/availability'
     | '/owner/login'
@@ -121,6 +141,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/book'
     | '/clothing'
+    | '/manage-booking'
+    | '/my-booking'
     | '/owner/appointments'
     | '/owner/availability'
     | '/owner/login'
@@ -133,6 +155,8 @@ export interface FileRouteTypes {
     | '/_public/about'
     | '/_public/book'
     | '/_public/clothing'
+    | '/_public/manage-booking'
+    | '/_public/my-booking'
     | '/owner/appointments'
     | '/owner/availability'
     | '/owner_/login'
@@ -190,6 +214,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicClothingRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/manage-booking': {
+      id: '/_public/manage-booking'
+      path: '/manage-booking'
+      fullPath: '/manage-booking'
+      preLoaderRoute: typeof PublicManageBookingRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/my-booking': {
+      id: '/_public/my-booking'
+      path: '/my-booking'
+      fullPath: '/my-booking'
+      preLoaderRoute: typeof PublicMyBookingRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/owner/': {
       id: '/owner/'
       path: '/'
@@ -225,6 +263,8 @@ interface PublicRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
   PublicBookRoute: typeof PublicBookRoute
   PublicClothingRoute: typeof PublicClothingRoute
+  PublicManageBookingRoute: typeof PublicManageBookingRoute
+  PublicMyBookingRoute: typeof PublicMyBookingRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
@@ -232,6 +272,8 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicAboutRoute: PublicAboutRoute,
   PublicBookRoute: PublicBookRoute,
   PublicClothingRoute: PublicClothingRoute,
+  PublicManageBookingRoute: PublicManageBookingRoute,
+  PublicMyBookingRoute: PublicMyBookingRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
 
