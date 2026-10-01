@@ -17,6 +17,8 @@ import { Route as PublicBookRouteImport } from './routes/_public.book'
 import { Route as PublicClothingRouteImport } from './routes/_public.clothing'
 import { Route as OwnerIndexRouteImport } from './routes/owner.index'
 import { Route as OwnerAppointmentsRouteImport } from './routes/owner.appointments'
+import { Route as OwnerAvailabilityRouteImport } from './routes/owner.availability'
+import { Route as OwnerLoginRouteImport } from './routes/owner_.login'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -57,6 +59,16 @@ const OwnerAppointmentsRoute = OwnerAppointmentsRouteImport.update({
   path: '/appointments',
   getParentRoute: () => OwnerRoute,
 } as any)
+const OwnerAvailabilityRoute = OwnerAvailabilityRouteImport.update({
+  id: '/availability',
+  path: '/availability',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerLoginRoute = OwnerLoginRouteImport.update({
+  id: '/owner_/login',
+  path: '/owner/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -65,6 +77,8 @@ export interface FileRoutesByFullPath {
   '/book': typeof PublicBookRoute
   '/clothing': typeof PublicClothingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
+  '/owner/availability': typeof OwnerAvailabilityRoute
+  '/owner/login': typeof OwnerLoginRoute
   '/owner/': typeof OwnerIndexRoute
 }
 export interface FileRoutesByTo {
@@ -72,6 +86,8 @@ export interface FileRoutesByTo {
   '/book': typeof PublicBookRoute
   '/clothing': typeof PublicClothingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
+  '/owner/availability': typeof OwnerAvailabilityRoute
+  '/owner/login': typeof OwnerLoginRoute
   '/': typeof PublicIndexRoute
   '/owner': typeof OwnerIndexRoute
 }
@@ -83,6 +99,8 @@ export interface FileRoutesById {
   '/_public/book': typeof PublicBookRoute
   '/_public/clothing': typeof PublicClothingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
+  '/owner/availability': typeof OwnerAvailabilityRoute
+  '/owner_/login': typeof OwnerLoginRoute
   '/_public/': typeof PublicIndexRoute
   '/owner/': typeof OwnerIndexRoute
 }
@@ -95,9 +113,19 @@ export interface FileRouteTypes {
     | '/book'
     | '/clothing'
     | '/owner/appointments'
+    | '/owner/availability'
+    | '/owner/login'
     | '/owner/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/book' | '/clothing' | '/owner/appointments' | '/' | '/owner'
+  to:
+    | '/about'
+    | '/book'
+    | '/clothing'
+    | '/owner/appointments'
+    | '/owner/availability'
+    | '/owner/login'
+    | '/'
+    | '/owner'
   id:
     | '__root__'
     | '/_public'
@@ -106,6 +134,8 @@ export interface FileRouteTypes {
     | '/_public/book'
     | '/_public/clothing'
     | '/owner/appointments'
+    | '/owner/availability'
+    | '/owner_/login'
     | '/_public/'
     | '/owner/'
   fileRoutesById: FileRoutesById
@@ -113,6 +143,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   OwnerRoute: typeof OwnerRouteWithChildren
+  OwnerLoginRoute: typeof OwnerLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -173,6 +204,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OwnerAppointmentsRouteImport
       parentRoute: typeof OwnerRoute
     }
+    '/owner/availability': {
+      id: '/owner/availability'
+      path: '/availability'
+      fullPath: '/owner/availability'
+      preLoaderRoute: typeof OwnerAvailabilityRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner_/login': {
+      id: '/owner_/login'
+      path: '/owner/login'
+      fullPath: '/owner/login'
+      preLoaderRoute: typeof OwnerLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -195,11 +240,13 @@ const PublicRouteWithChildren =
 
 interface OwnerRouteChildren {
   OwnerAppointmentsRoute: typeof OwnerAppointmentsRoute
+  OwnerAvailabilityRoute: typeof OwnerAvailabilityRoute
   OwnerIndexRoute: typeof OwnerIndexRoute
 }
 
 const OwnerRouteChildren: OwnerRouteChildren = {
   OwnerAppointmentsRoute: OwnerAppointmentsRoute,
+  OwnerAvailabilityRoute: OwnerAvailabilityRoute,
   OwnerIndexRoute: OwnerIndexRoute,
 }
 
@@ -208,6 +255,7 @@ const OwnerRouteWithChildren = OwnerRoute._addFileChildren(OwnerRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   OwnerRoute: OwnerRouteWithChildren,
+  OwnerLoginRoute: OwnerLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
