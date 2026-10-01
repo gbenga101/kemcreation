@@ -138,6 +138,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _match_booking: {
+        Args: { _phone: string; _ref: string }
+        Returns: string
+      }
+      cancel_booking: {
+        Args: { _phone: string; _ref: string }
+        Returns: undefined
+      }
       claim_owner: { Args: never; Returns: boolean }
       create_booking: {
         Args: {
@@ -162,7 +170,25 @@ export type Database = {
         }
         Returns: boolean
       }
+      lookup_booking: {
+        Args: { _phone: string; _ref: string }
+        Returns: {
+          appointment_date: string
+          appointment_time: string
+          event_date: string
+          full_name: string
+          notes: string
+          occasion: string
+          reference: string
+          service_type: string
+          status: string
+        }[]
+      }
       owner_exists: { Args: never; Returns: boolean }
+      reschedule_booking: {
+        Args: { _date: string; _phone: string; _ref: string; _time: string }
+        Returns: undefined
+      }
       slot_hours: {
         Args: { _d: string }
         Returns: {
