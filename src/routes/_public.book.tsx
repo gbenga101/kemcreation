@@ -90,6 +90,8 @@ function BookPage() {
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Appointments & consultations</p>
     <h1 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-4xl">Request an appointment</h1>
 
+    <p className="mt-5 border-l-2 border-border bg-surface px-4 py-3 text-sm text-muted-foreground">Already booked with us? <Link to="/manage-booking" className="font-medium text-accent underline underline-offset-4 hover:no-underline">Manage or reschedule your appointment here →</Link></p>
+
     <ol className="mt-8 grid grid-cols-4 gap-2" aria-label="Booking steps">
       {steps.map((s, i) => <li key={s} aria-current={i === step ? "step" : undefined} className="space-y-2">
         <div className={cn("h-1 rounded-full", i <= step ? "bg-accent" : "bg-border")} />
