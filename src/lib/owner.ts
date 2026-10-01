@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export type DbStatus = "pending" | "confirmed" | "reschedule_requested" | "rescheduled" | "completed" | "cancelled" | "no_show";
 export type OwnerAppointment = {
   id: string; reference: string; service_type: string; appointment_date: string; appointment_time: string;
-  occasion: string | null; event_date: string | null; notes: string | null; status: DbStatus; created_at: string;
+  occasion: string | null; event_date: string | null; notes: string | null; status: DbStatus; created_at: string; production_stage: string;
   customers: { full_name: string; phone: string; email: string | null } | null;
 };
 
@@ -17,7 +17,7 @@ export function useAppointments() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("appointments")
-        .select("id, reference, service_type, appointment_date, appointment_time, occasion, event_date, notes, status, created_at, customers(full_name, phone, email)")
+        .select("id, reference, service_type, appointment_date, appointment_time, occasion, event_date, notes, status, created_at, production_stage, customers(full_name, phone, email)")
         .order("appointment_date").order("appointment_time");
       if (error) throw error;
       return data as unknown as OwnerAppointment[];
@@ -30,6 +30,17 @@ export function useSetStatus() {
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: DbStatus }) => {
       const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["owner"] }),
+  });
+}
+
+export function useSetStage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, stage }: { id: string; stage: string }) => {
+      const { error } = await supabase.from("appointments").update({ production_stage: stage } as never).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["owner"] }),

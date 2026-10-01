@@ -9,6 +9,7 @@ import { TextField } from "@/components/ui/field";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { AppointmentStatusBadge } from "@/components/ui/appointment-status";
+import { StageStepper, stageLabel } from "@/components/production";
 import { cn } from "@/lib/utils";
 import { serviceTitle, slotsFor, formatTime, toISODate, errorMessages } from "@/lib/booking";
 
@@ -29,7 +30,7 @@ export const Route = createFileRoute("/_public/manage-booking")({
   component: ManagePage,
 });
 
-type Booking = { reference: string; service_type: string; appointment_date: string; appointment_time: string; occasion: string | null; event_date: string | null; notes: string | null; status: string; full_name: string };
+type Booking = { reference: string; service_type: string; appointment_date: string; appointment_time: string; occasion: string | null; event_date: string | null; notes: string | null; status: string; full_name: string; production_stage: string };
 
 const badgeFor = (s: string) => {
   const map: Record<string, Parameters<typeof AppointmentStatusBadge>[0]["status"]> = {
@@ -125,6 +126,14 @@ function Details({ booking: b, creds, notice, onChanged, onReset }: { booking: B
         {b.notes && <div className="sm:col-span-2"><dt className="text-muted-foreground">Notes</dt><dd className="mt-1 whitespace-pre-line break-words">{b.notes}</dd></div>}
       </dl>
     </div>
+
+    {b.status !== "cancelled" && b.status !== "no_show" && <div className="rounded-md border border-border bg-card p-5">
+      <p className="font-display text-lg font-semibold">Garment progress</p>
+      <p className="mt-1 text-sm text-muted-foreground">Current stage: <span className="font-medium text-foreground">{stageLabel(b.production_stage)}</span></p>
+      <StageStepper stage={b.production_stage} className="mt-4" />
+      {b.production_stage === "fitting_ready" && <p className="mt-4 border-l-2 border-accent bg-surface p-3 text-sm">Your outfit is ready for a fitting! We look forward to seeing you at our Badagry studio.</p>}
+      {b.production_stage === "completed" && <p className="mt-4 border-l-2 border-accent bg-surface p-3 text-sm">Your order is completed and ready for pickup or delivery across Lagos.</p>}
+    </div>}
 
     {b.status === "cancelled" && <p className="border-l-2 border-border bg-surface p-4 text-sm leading-6">
       This appointment was cancelled. If you would like to book a new appointment, you can visit the <Link to="/book" className="text-accent underline underline-offset-4">booking page</Link>.

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { OwnerAppointmentCard } from "@/components/owner-appointment-card";
-import { useAppointments, type DbStatus } from "@/lib/owner";
+import { lagosToday, useAppointments, type DbStatus } from "@/lib/owner";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/owner/appointments")({ head: () => ({ meta: [
@@ -13,14 +13,18 @@ export const Route = createFileRoute("/owner/appointments")({ head: () => ({ met
   { name: "robots", content: "noindex" },
 ] }), component: AppointmentsPage });
 
-const filters: { id: "all" | DbStatus; label: string }[] = [
-  { id: "all", label: "All" }, { id: "pending", label: "Pending" }, { id: "confirmed", label: "Confirmed" }, { id: "completed", label: "Completed" }, { id: "cancelled", label: "Cancelled" },
+type F = "all" | "deadlines" | DbStatus;
+const filters: { id: F; label: string }[] = [
+  { id: "all", label: "All" }, { id: "deadlines", label: "Upcoming Event Deadlines" }, { id: "pending", label: "Pending" }, { id: "confirmed", label: "Confirmed" }, { id: "completed", label: "Completed" }, { id: "cancelled", label: "Cancelled" },
 ];
 
 function AppointmentsPage() {
-  const [filter, setFilter] = useState<"all" | DbStatus>("all");
+  const [filter, setFilter] = useState<F>("all");
   const { data = [], isLoading, isError } = useAppointments();
-  const list = filter === "all" ? data : data.filter((a) => a.status === filter);
+  const today = lagosToday();
+  const list = filter === "all" ? data
+    : filter === "deadlines" ? data.filter((a) => a.event_date && a.event_date >= today && !["cancelled", "no_show"].includes(a.status)).sort((x, y) => x.event_date!.localeCompare(y.event_date!))
+    : data.filter((a) => a.status === filter);
   return <>
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Owner / Appointments</p>
     <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Appointments</h1>
