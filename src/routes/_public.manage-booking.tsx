@@ -12,7 +12,7 @@ import { AppointmentStatusBadge } from "@/components/ui/appointment-status";
 import { cn } from "@/lib/utils";
 import { serviceTitle, slotsFor, formatTime, toISODate, errorMessages } from "@/lib/booking";
 
-type Search = { ref?: string; phone?: string };
+type Search = { ref?: string | undefined; phone?: string | undefined };
 
 export const Route = createFileRoute("/_public/manage-booking")({
   validateSearch: (s: Record<string, unknown>): Search => ({
