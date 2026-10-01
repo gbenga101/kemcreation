@@ -7,10 +7,10 @@ import { FOLLOW_UPS, prettyDate, useSetFollowUp, whatsappLink, type FollowUp, ty
 
 export function FollowUpBadge({ status }: { status: FollowUp }) {
   if (status === "none") return null;
-  const base = "inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium";
-  if (status === "follow_up_due") return <span className={cn(base, "bg-status-pending text-status-pending-foreground")}><BellRing aria-hidden className="size-3.5" />Follow-up due</span>;
-  if (status === "waiting_client") return <span className={cn(base, "bg-status-rescheduled text-status-rescheduled-foreground")}><Clock aria-hidden className="size-3.5" />Waiting on client</span>;
-  return <span className={cn(base, "bg-status-confirmed text-status-confirmed-foreground")}><CheckCircle2 aria-hidden className="size-3.5" />Follow-up done</span>;
+  const base = "inline-flex items-center gap-1.5 rounded-sm border border-current bg-card px-2 py-1 text-xs font-medium";
+  if (status === "follow_up_due") return <span className={cn(base, "text-status-pending")}><BellRing aria-hidden className="size-3.5" />Follow-up due</span>;
+  if (status === "waiting_client") return <span className={cn(base, "text-[oklch(0.42_0.08_245)]")}><Clock aria-hidden className="size-3.5" />Waiting on client</span>;
+  return <span className={cn(base, "text-status-confirmed")}><CheckCircle2 aria-hidden className="size-3.5" />Follow-up done</span>;
 }
 
 export function followUpMessage(a: OwnerAppointment) {

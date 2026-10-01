@@ -1,10 +1,19 @@
-import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { OwnerAppointmentCard } from "@/components/owner-appointment-card";
-import { lagosToday, useAppointments, type DbStatus } from "@/lib/owner";
+import { lagosToday, needsFollowUp, useAppointments, type DbStatus } from "@/lib/owner";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/owner/appointments")({ head: () => ({ meta: [
+type F = "all" | "deadlines" | "follow_up" | DbStatus;
+const filters: { id: F; label: string }[] = [
+  { id: "all", label: "All" }, { id: "follow_up", label: "Needs Follow-Up" }, { id: "deadlines", label: "Upcoming Event Deadlines" }, { id: "pending", label: "Pending" }, { id: "confirmed", label: "Confirmed" }, { id: "completed", label: "Completed" }, { id: "cancelled", label: "Cancelled" },
+];
+
+export const Route = createFileRoute("/owner/appointments")({
+  validateSearch: (s: Record<string, unknown>): { filter?: F } => {
+    const f = s["filter"];
+    return filters.some((x) => x.id === f) ? { filter: f as F } : {};
+  },
+  head: () => ({ meta: [
   { title: "Appointments | Kem's Creation owner" },
   { name: "description", content: "Review, confirm and update Kem's Creation appointments." },
   { property: "og:title", content: "Appointments | Kem's Creation owner" },
@@ -13,16 +22,14 @@ export const Route = createFileRoute("/owner/appointments")({ head: () => ({ met
   { name: "robots", content: "noindex" },
 ] }), component: AppointmentsPage });
 
-type F = "all" | "deadlines" | DbStatus;
-const filters: { id: F; label: string }[] = [
-  { id: "all", label: "All" }, { id: "deadlines", label: "Upcoming Event Deadlines" }, { id: "pending", label: "Pending" }, { id: "confirmed", label: "Confirmed" }, { id: "completed", label: "Completed" }, { id: "cancelled", label: "Cancelled" },
-];
-
 function AppointmentsPage() {
-  const [filter, setFilter] = useState<F>("all");
+  const filter = Route.useSearch().filter ?? "all";
+  const navigate = useNavigate({ from: "/owner/appointments" });
+  const setFilter = (f: F) => navigate({ search: f === "all" ? {} : { filter: f }, replace: true });
   const { data = [], isLoading, isError } = useAppointments();
   const today = lagosToday();
   const list = filter === "all" ? data
+    : filter === "follow_up" ? data.filter(needsFollowUp)
     : filter === "deadlines" ? data.filter((a) => a.event_date && a.event_date >= today && !["cancelled", "no_show"].includes(a.status)).sort((x, y) => x.event_date!.localeCompare(y.event_date!))
     : data.filter((a) => a.status === filter);
   return <>
