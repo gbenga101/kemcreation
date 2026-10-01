@@ -14,13 +14,110 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          appointment_date: string
+          appointment_time: string
+          created_at: string
+          customer_id: string
+          event_date: string | null
+          id: string
+          notes: string | null
+          occasion: string | null
+          payment_status: string
+          reference: string
+          service_type: string
+          status: string
+        }
+        Insert: {
+          appointment_date: string
+          appointment_time: string
+          created_at?: string
+          customer_id: string
+          event_date?: string | null
+          id?: string
+          notes?: string | null
+          occasion?: string | null
+          payment_status?: string
+          reference: string
+          service_type: string
+          status?: string
+        }
+        Update: {
+          appointment_date?: string
+          appointment_time?: string
+          created_at?: string
+          customer_id?: string
+          event_date?: string | null
+          id?: string
+          notes?: string | null
+          occasion?: string | null
+          payment_status?: string
+          reference?: string
+          service_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          phone: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          phone: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          phone?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_booking: {
+        Args: {
+          _date: string
+          _email: string
+          _event_date: string
+          _full_name: string
+          _notes: string
+          _occasion: string
+          _phone: string
+          _service: string
+          _time: string
+        }
+        Returns: string
+      }
+      get_booked_slots: { Args: { _date: string }; Returns: string[] }
+      slot_hours: {
+        Args: { _d: string }
+        Returns: {
+          close_t: string
+          open_t: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
