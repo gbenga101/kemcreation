@@ -24,6 +24,7 @@ function OwnerOverview() {
   const active = (s: string) => ["confirmed", "rescheduled"].includes(st(s));
   const pending = data.filter((a) => st(a.status) === "pending");
   const todays = data.filter((a) => active(a.status) && a.appointment_date.slice(0, 10) === today);
+  const tomorrows = data.filter((a) => active(a.status) && a.appointment_date.slice(0, 10) === addDaysISO(today, 1));
   const upcoming = data.filter((a) => active(a.status) && a.appointment_date.slice(0, 10) >= today && a.appointment_date.slice(0, 10) <= weekEnd);
   const thisWeek = upcoming;
   const followUps = data.filter(needsFollowUp).length;
@@ -44,6 +45,10 @@ function OwnerOverview() {
 
     <section className="mt-12"><h2 className="mb-4 font-display text-2xl font-semibold sm:text-3xl">Today's schedule</h2>
       {todays.length ? <ol className="divide-y divide-border border border-border bg-card">{todays.map((a) => <li key={a.id} className="grid grid-cols-[5.5rem_1fr] gap-4 px-5 py-4 text-sm"><span className="font-semibold">{formatTime(a.appointment_time.slice(0, 5))}</span><span><span className="font-medium">{a.customers?.full_name}</span><span className="block text-muted-foreground">{serviceTitle(a.service_type)}</span></span></li>)}</ol> : <Empty text="No confirmed visits today." />}
+    </section>
+
+    <section className="mt-12"><h2 className="mb-4 font-display text-2xl font-semibold sm:text-3xl">Coming tomorrow</h2>
+      {tomorrows.length ? <ol className="divide-y divide-border border-2 border-accent bg-surface">{tomorrows.map((a) => <li key={a.id} className="grid grid-cols-[5.5rem_1fr_auto] items-start gap-4 px-5 py-4 text-sm"><span className="font-semibold">{formatTime(a.appointment_time.slice(0, 5))}</span><span><span className="font-medium">{a.customers?.full_name}</span><span className="block text-muted-foreground">{serviceTitle(a.service_type)}</span></span><span className="text-xs text-muted-foreground">{a.reminder_sent_at ? "Reminder sent" : "Reminder pending"}</span></li>)}</ol> : <Empty text="No confirmed visits tomorrow." />}
     </section>
 
     <section className="mt-12"><h2 className="mb-4 font-display text-2xl font-semibold sm:text-3xl">Upcoming appointments</h2>
