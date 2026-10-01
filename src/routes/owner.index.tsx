@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { OwnerAppointmentCard } from "@/components/owner-appointment-card";
 import { serviceTitle, formatTime } from "@/lib/booking";
-import { addDaysISO, lagosToday, prettyDate, useAppointments } from "@/lib/owner";
+import { addDaysISO, lagosToday, needsFollowUp, prettyDate, useAppointments } from "@/lib/owner";
 
 export const Route = createFileRoute("/owner/")({ head: () => ({ meta: [
   { title: "Owner overview | Kem's Creation" },
@@ -26,14 +26,16 @@ function OwnerOverview() {
   const todays = data.filter((a) => active(a.status) && a.appointment_date.slice(0, 10) === today);
   const upcoming = data.filter((a) => active(a.status) && a.appointment_date.slice(0, 10) >= today && a.appointment_date.slice(0, 10) <= weekEnd);
   const thisWeek = upcoming;
+  const followUps = data.filter(needsFollowUp).length;
 
   return <>
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Owner overview</p>
     <h1 className="mt-3 font-display text-4xl font-semibold leading-tight sm:text-5xl">{prettyDate(today)}</h1>
     {isError && <p className="mt-6 text-sm text-destructive">Couldn't load appointments. Please refresh.</p>}
-    <div className="mt-8 grid gap-4 sm:grid-cols-3">
+    <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {[["Pending requests", pending.length], ["Confirmed today", todays.length], ["Upcoming this week", thisWeek.length]].map(([label, n]) =>
         <div key={label} className="border border-border bg-card p-5"><p className="text-xs uppercase tracking-widest text-muted-foreground">{label}</p><p className="mt-2 font-display text-4xl font-semibold">{isLoading ? "–" : n}</p></div>)}
+      <Link to="/owner/appointments" search={{ filter: "follow_up" }} className="group border border-accent bg-surface p-5 transition-colors hover:bg-card"><p className="text-xs uppercase tracking-widest text-accent">Follow-ups due</p><p className="mt-2 font-display text-4xl font-semibold">{isLoading ? "–" : followUps}</p><p className="mt-1 text-xs text-muted-foreground underline-offset-4 group-hover:underline">View list →</p></Link>
     </div>
 
     <section className="mt-12"><h2 className="mb-4 font-display text-2xl font-semibold sm:text-3xl">New & pending requests</h2>

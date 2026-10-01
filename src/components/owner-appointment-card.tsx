@@ -2,6 +2,7 @@ import { MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppointmentStatusBadge } from "@/components/ui/appointment-status";
 import { EventUrgencyBadge, StageStepper, stagesFor } from "@/components/production";
+import { FollowUpBadge, FollowUpPanel } from "@/components/follow-up";
 import { serviceTitle, formatTime } from "@/lib/booking";
 import { badgeStatus, lagosToday, prettyDate, useSetStage, useSetStatus, whatsappLink, type DbStatus, type OwnerAppointment } from "@/lib/owner";
 
@@ -22,7 +23,7 @@ export function OwnerAppointmentCard({ a, compact = false }: { a: OwnerAppointme
   return <article className="border border-border bg-card p-5">
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0"><h3 className="text-base font-semibold">{c?.full_name ?? "Unknown customer"}</h3><p className="mt-1 text-sm text-muted-foreground">{serviceTitle(a.service_type)}</p></div>
-      <div className="flex flex-wrap items-center gap-2"><EventUrgencyBadge eventDate={a.event_date} today={lagosToday()} /><AppointmentStatusBadge status={badgeStatus(a.status) as never} /></div>
+      <div className="flex flex-wrap items-center gap-2"><FollowUpBadge status={a.follow_up_status} /><EventUrgencyBadge eventDate={a.event_date} today={lagosToday()} /><AppointmentStatusBadge status={badgeStatus(a.status) as never} /></div>
     </div>
     <dl className="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
       <div><dt className="text-xs uppercase tracking-widest text-muted-foreground">When</dt><dd>{prettyDate(a.appointment_date)}, {formatTime(a.appointment_time.slice(0, 5))}</dd></div>
@@ -47,7 +48,8 @@ export function OwnerAppointmentCard({ a, compact = false }: { a: OwnerAppointme
       <StageStepper stage={a.production_stage} service={a.service_type} className="mt-3" />
       {setStage.isError && <p className="mt-2 text-sm text-destructive">Couldn't update the stage. Please try again.</p>}
     </div>}
-    {nextActions[a.status] && <div className="mt-5 flex flex-wrap gap-2">{nextActions[a.status]!.map((n) => <Button key={n.status} size="sm" variant={n.variant} disabled={setStatus.isPending} onClick={() => setStatus.mutate({ id: a.id, status: n.status })}>{n.label}</Button>)}</div>}
+    {!compact && <FollowUpPanel a={a} />}
+    {nextActions[a.status] &&  <div className="mt-5 flex flex-wrap gap-2">{nextActions[a.status]!.map((n) => <Button key={n.status} size="sm" variant={n.variant} disabled={setStatus.isPending} onClick={() => setStatus.mutate({ id: a.id, status: n.status })}>{n.label}</Button>)}</div>}
     {setStatus.isError && <p className="mt-3 text-sm text-destructive">Couldn't update this appointment. Please try again.</p>}
   </article>;
 }

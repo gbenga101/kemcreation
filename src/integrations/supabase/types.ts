@@ -21,6 +21,8 @@ export type Database = {
           created_at: string
           customer_id: string
           event_date: string | null
+          follow_up_notes: string | null
+          follow_up_status: string
           id: string
           notes: string | null
           occasion: string | null
@@ -36,6 +38,8 @@ export type Database = {
           created_at?: string
           customer_id: string
           event_date?: string | null
+          follow_up_notes?: string | null
+          follow_up_status?: string
           id?: string
           notes?: string | null
           occasion?: string | null
@@ -51,6 +55,8 @@ export type Database = {
           created_at?: string
           customer_id?: string
           event_date?: string | null
+          follow_up_notes?: string | null
+          follow_up_status?: string
           id?: string
           notes?: string | null
           occasion?: string | null
