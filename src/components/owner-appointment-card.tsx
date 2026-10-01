@@ -8,6 +8,7 @@ import { badgeStatus, lagosToday, prettyDate, useSetStage, useSetStatus, whatsap
 const nextActions: Partial<Record<DbStatus, { status: DbStatus; label: string; variant?: "outline" }[]>> = {
   pending: [{ status: "confirmed", label: "Confirm appointment" }, { status: "cancelled", label: "Decline / Cancel", variant: "outline" }],
   confirmed: [{ status: "completed", label: "Mark completed" }, { status: "no_show", label: "No-show", variant: "outline" }, { status: "cancelled", label: "Cancel", variant: "outline" }],
+  rescheduled: [{ status: "confirmed", label: "Confirm new time" }, { status: "completed", label: "Mark completed", variant: "outline" }, { status: "cancelled", label: "Cancel", variant: "outline" }],
 };
 
 export function OwnerAppointmentCard({ a, compact = false }: { a: OwnerAppointment; compact?: boolean }) {
