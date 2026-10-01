@@ -13,3 +13,10 @@
 # Stage 3 — booking
 - [x] Bookings saved in Lovable Cloud (customers, appointments), pending + slot held
 - [x] 4-step /book flow with confirmation and reference
+
+# Stage 4/5 — owner
+- [x] Navbar Book Appointment button (desktop + mobile menu)
+- [x] Owner sign-in at /owner/login; /owner restricted to owner role
+- [x] Overview: summary, pending requests, today, upcoming
+- [x] Appointments list with filters and status actions
+- [x] Availability blocks hidden from /book
