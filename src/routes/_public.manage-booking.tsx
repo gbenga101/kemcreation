@@ -16,8 +16,8 @@ type Search = { ref?: string; phone?: string };
 
 export const Route = createFileRoute("/_public/manage-booking")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    ref: typeof s.ref === "string" ? s.ref : undefined,
-    phone: typeof s.phone === "string" ? s.phone : s.phone != null ? String(s.phone) : undefined,
+    ref: typeof s["ref"] === "string" ? s["ref"] : undefined,
+    phone: typeof s["phone"] === "string" ? s["phone"] : s["phone"] != null ? String(s["phone"]) : undefined,
   }),
   head: () => ({ meta: [
     { title: "Manage your booking | Kem's Creation" },
