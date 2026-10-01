@@ -15,3 +15,4 @@
 - Centralize temporary visual tokens in `src/styles.css` and reusable controls under `src/components`; this keeps future brand replacement and later booking stages localized.
 - Owner access is the `owner` role in `user_roles`; the first signed-in account claims it via `claim_owner()` and owner data is read with the browser client under RLS — keeps privileged access server-enforced without extra server functions.
 - Blocked availability lives in `blocked_slots` and is enforced inside `get_booked_slots`/`create_booking` — the public calendar and the database agree on what is bookable.
+- Visit reminders run from one shared server routine (`runReminders`) invoked by a daily cron hook route and an owner-only server function; `reminder_sent_at` guarantees at most one reminder per appointment.
