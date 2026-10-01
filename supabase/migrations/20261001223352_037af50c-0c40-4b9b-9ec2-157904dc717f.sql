@@ -1,0 +1,1 @@
+ALTER TABLE public.appointments ADD COLUMN follow_up_status text NOT NULL DEFAULT 'none' CHECK (follow_up_status IN ('none','follow_up_due','waiting_client','completed')), ADD COLUMN follow_up_notes text;
