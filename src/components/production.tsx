@@ -10,12 +10,14 @@ export const STAGES = [
 ] as const;
 export type Stage = (typeof STAGES)[number]["id"];
 export const stageIndex = (s: string) => Math.max(0, STAGES.findIndex((x) => x.id === s));
+export const stagesFor = (service?: string) => service === "ready_to_wear" ? STAGES.filter((s) => s.id === "fitting_ready" || s.id === "completed") : [...STAGES];
 export const stageLabel = (s: string) => STAGES[stageIndex(s)]!.label;
 
-export function StageStepper({ stage, className }: { stage: string; className?: string }) {
-  const cur = stageIndex(stage);
-  return <ol aria-label="Garment progress" className={cn("grid grid-cols-5 gap-1.5", className)}>
-    {STAGES.map((s, i) => <li key={s.id} aria-current={i === cur ? "step" : undefined} className="min-w-0">
+export function StageStepper({ stage, service, className }: { stage: string; service?: string; className?: string }) {
+  const list = stagesFor(service);
+  const cur = Math.max(0, list.findIndex((x) => x.id === stage));
+  return <ol aria-label="Garment progress" className={cn("grid gap-1.5", list.length === 2 ? "grid-cols-2" : "grid-cols-5", className)}>
+    {list.map((s, i) => <li key={s.id} aria-current={i === cur ? "step" : undefined} className="min-w-0">
       <span className={cn("block h-1.5 rounded-full", i <= cur ? "bg-accent" : "bg-border")} />
       <span className={cn("mt-2 flex items-start gap-1 text-[11px] leading-tight", i === cur ? "font-semibold text-foreground" : "text-muted-foreground")}>
         {i < cur && <Check aria-hidden className="mt-px size-3 shrink-0 text-accent" />}{s.label}

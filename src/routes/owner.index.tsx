@@ -20,10 +20,12 @@ function OwnerOverview() {
   const { data = [], isLoading, isError } = useAppointments();
   const today = lagosToday();
   const weekEnd = addDaysISO(today, 7);
-  const pending = data.filter((a) => a.status === "pending");
-  const todays = data.filter((a) => a.status === "confirmed" && a.appointment_date === today);
-  const upcoming = data.filter((a) => a.status === "confirmed" && a.appointment_date > today);
-  const thisWeek = upcoming.filter((a) => a.appointment_date <= weekEnd);
+  const st = (s: string) => s.toLowerCase();
+  const active = (s: string) => ["confirmed", "rescheduled"].includes(st(s));
+  const pending = data.filter((a) => st(a.status) === "pending");
+  const todays = data.filter((a) => active(a.status) && a.appointment_date.slice(0, 10) === today);
+  const upcoming = data.filter((a) => active(a.status) && a.appointment_date.slice(0, 10) >= today && a.appointment_date.slice(0, 10) <= weekEnd);
+  const thisWeek = upcoming;
 
   return <>
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Owner overview</p>
