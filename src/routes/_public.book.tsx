@@ -207,6 +207,11 @@ function Confirmation({ reference, service, date, time, name, phone }: { referen
       <li>Bring any inspiration photos, fabric or event details that will help.</li>
       <li>Keep your booking reference handy in case you need to make changes.</li>
     </ol>
-    <div className="mt-10 flex flex-wrap gap-3"><Button asChild size="lg"><Link to="/">Back to home</Link></Button><Button asChild size="lg" variant="outline"><Link to="/clothing">Explore clothing</Link></Button></div>
+    <div className="mt-10 border-l-2 border-accent bg-surface p-5">
+      <p className="font-display text-lg font-semibold">Need to make a change later?</p>
+      <p className="mt-1 text-sm text-muted-foreground">Check your status, reschedule or cancel any time with your reference and phone number.</p>
+      <Button asChild size="lg" className="mt-4"><Link to="/manage-booking" search={{ ref: reference, phone: phone.replace(/[\s-]/g, "") }}>Manage Your Booking</Link></Button>
+    </div>
+    <div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg" variant="outline"><Link to="/">Back to home</Link></Button><Button asChild size="lg" variant="outline"><Link to="/clothing">Explore clothing</Link></Button></div>
   </section>;
 }
