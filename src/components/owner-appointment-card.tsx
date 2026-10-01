@@ -36,7 +36,7 @@ export function OwnerAppointmentCard({ a, compact = false }: { a: OwnerAppointme
         <p className="text-xs uppercase tracking-widest text-muted-foreground">Production stage</p>
         <div className="flex flex-wrap items-center gap-2">
           <label className="sr-only" htmlFor={`stage-${a.id}`}>Set production stage</label>
-          <select id={`stage-${a.id}`} value={STAGES[idx].id} disabled={setStage.isPending} onChange={(e) => setStage.mutate({ id: a.id, stage: e.target.value })} className="min-h-9 rounded-sm border border-input bg-background px-2 text-sm">
+          <select id={`stage-${a.id}`} value={STAGES[idx]!.id} disabled={setStage.isPending} onChange={(e) => setStage.mutate({ id: a.id, stage: e.target.value })} className="min-h-9 rounded-sm border border-input bg-background px-2 text-sm">
             {STAGES.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
           </select>
           {next && <Button size="sm" variant="outline" disabled={setStage.isPending} onClick={() => setStage.mutate({ id: a.id, stage: next.id })}>Advance Stage →</Button>}

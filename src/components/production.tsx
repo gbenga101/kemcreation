@@ -10,7 +10,7 @@ export const STAGES = [
 ] as const;
 export type Stage = (typeof STAGES)[number]["id"];
 export const stageIndex = (s: string) => Math.max(0, STAGES.findIndex((x) => x.id === s));
-export const stageLabel = (s: string) => STAGES[stageIndex(s)].label;
+export const stageLabel = (s: string) => STAGES[stageIndex(s)]!.label;
 
 export function StageStepper({ stage, className }: { stage: string; className?: string }) {
   const cur = stageIndex(stage);
