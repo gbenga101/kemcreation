@@ -25,6 +25,7 @@ export type Database = {
           notes: string | null
           occasion: string | null
           payment_status: string
+          production_stage: string
           reference: string
           service_type: string
           status: string
@@ -39,6 +40,7 @@ export type Database = {
           notes?: string | null
           occasion?: string | null
           payment_status?: string
+          production_stage?: string
           reference: string
           service_type: string
           status?: string
@@ -53,6 +55,7 @@ export type Database = {
           notes?: string | null
           occasion?: string | null
           payment_status?: string
+          production_stage?: string
           reference?: string
           service_type?: string
           status?: string
@@ -179,6 +182,7 @@ export type Database = {
           full_name: string
           notes: string
           occasion: string
+          production_stage: string
           reference: string
           service_type: string
           status: string
