@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-type FieldProps = { id: string; label: string; hint?: string; error?: string; required?: boolean };
+type FieldProps = { id: string; label: string; hint?: string | undefined; error?: string | undefined; required?: boolean | undefined };
 
 function FieldFrame({ id, label, hint, error, required, children }: FieldProps & { children: ReactNode }) {
   return <div className="space-y-2"><Label htmlFor={id} className="text-sm font-medium">{label}{required && <span className="ml-1 text-destructive" aria-hidden="true">*</span>}</Label>{children}{hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}{error && <p id={`${id}-error`} role="alert" className="text-xs text-destructive">{error}</p>}</div>;
