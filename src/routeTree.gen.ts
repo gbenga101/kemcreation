@@ -13,6 +13,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as PublicBookRouteImport } from './routes/_public.book'
 import { Route as PublicClothingRouteImport } from './routes/_public.clothing'
 import { Route as OwnerIndexRouteImport } from './routes/owner.index'
 import { Route as OwnerAppointmentsRouteImport } from './routes/owner.appointments'
@@ -36,6 +37,11 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicBookRoute = PublicBookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicClothingRoute = PublicClothingRouteImport.update({
   id: '/clothing',
   path: '/clothing',
@@ -56,12 +62,14 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/owner': typeof OwnerRouteWithChildren
   '/about': typeof PublicAboutRoute
+  '/book': typeof PublicBookRoute
   '/clothing': typeof PublicClothingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
   '/owner/': typeof OwnerIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof PublicAboutRoute
+  '/book': typeof PublicBookRoute
   '/clothing': typeof PublicClothingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
   '/': typeof PublicIndexRoute
@@ -72,6 +80,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/owner': typeof OwnerRouteWithChildren
   '/_public/about': typeof PublicAboutRoute
+  '/_public/book': typeof PublicBookRoute
   '/_public/clothing': typeof PublicClothingRoute
   '/owner/appointments': typeof OwnerAppointmentsRoute
   '/_public/': typeof PublicIndexRoute
@@ -80,14 +89,21 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/owner' | '/about' | '/clothing' | '/owner/appointments' | '/owner/'
+    | '/'
+    | '/owner'
+    | '/about'
+    | '/book'
+    | '/clothing'
+    | '/owner/appointments'
+    | '/owner/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/clothing' | '/owner/appointments' | '/' | '/owner'
+  to: '/about' | '/book' | '/clothing' | '/owner/appointments' | '/' | '/owner'
   id:
     | '__root__'
     | '/_public'
     | '/owner'
     | '/_public/about'
+    | '/_public/book'
     | '/_public/clothing'
     | '/owner/appointments'
     | '/_public/'
@@ -129,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/book': {
+      id: '/_public/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof PublicBookRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/clothing': {
       id: '/_public/clothing'
       path: '/clothing'
@@ -155,12 +178,14 @@ declare module '@tanstack/react-router' {
 
 interface PublicRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
+  PublicBookRoute: typeof PublicBookRoute
   PublicClothingRoute: typeof PublicClothingRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicAboutRoute: PublicAboutRoute,
+  PublicBookRoute: PublicBookRoute,
   PublicClothingRoute: PublicClothingRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
