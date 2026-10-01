@@ -1,19 +1,49 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CalendarDays, ClipboardList, MessageSquareMore, ShieldAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { createFileRoute } from "@tanstack/react-router";
+import { OwnerAppointmentCard } from "@/components/owner-appointment-card";
+import { serviceTitle, formatTime } from "@/lib/booking";
+import { addDaysISO, lagosToday, prettyDate, useAppointments } from "@/lib/owner";
 
 export const Route = createFileRoute("/owner/")({ head: () => ({ meta: [
-  { title: "Owner overview preview | Kem's Creation" },
-  { name: "description", content: "A Stage 1 preview of the Kem's Creation owner workspace. No live appointments or customer records are connected." },
-  { property: "og:title", content: "Owner overview preview | Kem's Creation" },
-  { property: "og:description", content: "An operational workspace preview with no live customer information." },
+  { title: "Owner overview | Kem's Creation" },
+  { name: "description", content: "Who is coming, what needs review, and what's next at Kem's Creation." },
+  { property: "og:title", content: "Owner overview | Kem's Creation" },
+  { property: "og:description", content: "Private owner command center for Kem's Creation." },
   { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
+  { name: "robots", content: "noindex" },
 ] }), component: OwnerOverview });
 
-function EmptySection({ icon: Icon, title, description }: { icon: typeof CalendarDays; title: string; description: string }) {
-  return <Card className="shadow-none"><CardContent className="flex min-h-44 flex-col items-start justify-center p-6"><Icon aria-hidden="true" className="mb-4 size-5 text-accent" /><h3 className="text-base font-semibold">{title}</h3><p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">{description}</p></CardContent></Card>;
+function Empty({ text }: { text: string }) {
+  return <p className="border border-dashed border-border px-5 py-8 text-sm text-muted-foreground">{text}</p>;
 }
+
 function OwnerOverview() {
-  return <><div className="max-w-3xl"><p className="text-xs font-semibold uppercase tracking-widest text-accent">Owner overview</p><h1 className="mt-3 font-display text-5xl leading-none sm:text-6xl">A clearer day starts here.</h1><p className="mt-4 text-base leading-7 text-muted-foreground">A place for appointments, follow-ups and the details that help you prepare. This is an interface preview, not a live schedule.</p></div><div className="mt-8 flex gap-3 border-l-2 border-accent bg-surface p-4"><ShieldAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-accent" /><div><p className="text-sm font-semibold">Stage 1 preview — no live business data</p><p className="mt-1 text-sm leading-6 text-muted-foreground">Appointments, customer details and follow-ups are not connected. This page is not an authenticated owner workspace yet; do not enter private customer information.</p></div></div><section className="mt-12"><div className="mb-5 flex items-center justify-between gap-4"><h2 className="font-display text-3xl sm:text-4xl">Needs attention</h2><span className="text-xs uppercase tracking-widest text-muted-foreground">No records connected</span></div><EmptySection icon={ClipboardList} title="Nothing to review yet" description="New requests and schedule issues will appear here once appointments are introduced." /></section><div className="mt-10 grid gap-9 md:grid-cols-2"><section><h2 className="mb-5 font-display text-3xl sm:text-4xl">Today</h2><EmptySection icon={CalendarDays} title="No schedule connected" description="Today's appointments will be shown here when a booking system is in place." /></section><section><h2 className="mb-5 font-display text-3xl sm:text-4xl">Follow-up</h2><EmptySection icon={MessageSquareMore} title="No follow-ups connected" description="Follow-up work will be visible here in a later stage." /></section></div><section className="mt-10 border-t border-border pt-8"><h2 className="font-display text-3xl sm:text-4xl">Upcoming</h2><p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">There is no upcoming schedule to display. No sample customer records have been added.</p><Button asChild variant="outline" className="mt-5"><Link to="/owner/appointments">View appointment workspace <ArrowRight /></Link></Button></section></>;
+  const { data = [], isLoading, isError } = useAppointments();
+  const today = lagosToday();
+  const weekEnd = addDaysISO(today, 7);
+  const pending = data.filter((a) => a.status === "pending");
+  const todays = data.filter((a) => a.status === "confirmed" && a.appointment_date === today);
+  const upcoming = data.filter((a) => a.status === "confirmed" && a.appointment_date > today);
+  const thisWeek = upcoming.filter((a) => a.appointment_date <= weekEnd);
+
+  return <>
+    <p className="text-xs font-semibold uppercase tracking-widest text-accent">Owner overview</p>
+    <h1 className="mt-3 font-display text-4xl font-semibold leading-tight sm:text-5xl">{prettyDate(today)}</h1>
+    {isError && <p className="mt-6 text-sm text-destructive">Couldn't load appointments. Please refresh.</p>}
+    <div className="mt-8 grid gap-4 sm:grid-cols-3">
+      {[["Pending requests", pending.length], ["Confirmed today", todays.length], ["Upcoming this week", thisWeek.length]].map(([label, n]) =>
+        <div key={label} className="border border-border bg-card p-5"><p className="text-xs uppercase tracking-widest text-muted-foreground">{label}</p><p className="mt-2 font-display text-4xl font-semibold">{isLoading ? "–" : n}</p></div>)}
+    </div>
+
+    <section className="mt-12"><h2 className="mb-4 font-display text-2xl font-semibold sm:text-3xl">New & pending requests</h2>
+      {isLoading ? <Empty text="Loading…" /> : pending.length ? <div className="grid gap-4">{pending.map((a) => <OwnerAppointmentCard key={a.id} a={a} />)}</div> : <Empty text="No requests waiting for review." />}
+    </section>
+
+    <section className="mt-12"><h2 className="mb-4 font-display text-2xl font-semibold sm:text-3xl">Today's schedule</h2>
+      {todays.length ? <ol className="divide-y divide-border border border-border bg-card">{todays.map((a) => <li key={a.id} className="grid grid-cols-[5.5rem_1fr] gap-4 px-5 py-4 text-sm"><span className="font-semibold">{formatTime(a.appointment_time.slice(0, 5))}</span><span><span className="font-medium">{a.customers?.full_name}</span><span className="block text-muted-foreground">{serviceTitle(a.service_type)}</span></span></li>)}</ol> : <Empty text="No confirmed visits today." />}
+    </section>
+
+    <section className="mt-12"><h2 className="mb-4 font-display text-2xl font-semibold sm:text-3xl">Upcoming appointments</h2>
+      {upcoming.length ? <div className="grid gap-4 md:grid-cols-2">{upcoming.slice(0, 10).map((a) => <OwnerAppointmentCard key={a.id} a={a} compact />)}</div> : <Empty text="No upcoming confirmed appointments." />}
+    </section>
+  </>;
 }
