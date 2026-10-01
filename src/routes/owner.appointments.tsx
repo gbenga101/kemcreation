@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { OwnerAppointmentCard } from "@/components/owner-appointment-card";
+import { ReminderCheckButton } from "@/components/reminder-check";
 import { lagosToday, needsFollowUp, useAppointments, type DbStatus } from "@/lib/owner";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,7 @@ function AppointmentsPage() {
   return <>
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Owner / Appointments</p>
     <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Appointments</h1>
+    <div className="mt-4 border-l-2 border-border pl-4"><p className="mb-2 text-xs text-muted-foreground">Reminders go out automatically every morning at 8:00 (Lagos time) for tomorrow's confirmed visits.</p><ReminderCheckButton /></div>
     <div role="group" aria-label="Filter by status" className="mt-6 flex flex-wrap gap-2">{filters.map((f) => <button key={f.id} type="button" aria-pressed={filter === f.id} onClick={() => setFilter(f.id)} className={cn("min-h-10 border px-4 text-sm transition-colors", filter === f.id ? "border-foreground bg-foreground text-background" : "border-border bg-card hover:border-foreground")}>{f.label}</button>)}</div>
     <div className="mt-6 grid gap-4">
       {isError && <p className="text-sm text-destructive">Couldn't load appointments. Please refresh.</p>}

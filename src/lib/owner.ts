@@ -5,7 +5,7 @@ export type DbStatus = "pending" | "confirmed" | "reschedule_requested" | "resch
 export type OwnerAppointment = {
   id: string; reference: string; service_type: string; appointment_date: string; appointment_time: string;
   occasion: string | null; event_date: string | null; notes: string | null; status: DbStatus; created_at: string; production_stage: string;
-  follow_up_status: FollowUp; follow_up_notes: string | null;
+  follow_up_status: FollowUp; follow_up_notes: string | null; reminder_sent_at: string | null;
   customers: { full_name: string; phone: string; email: string | null } | null;
 };
 export type FollowUp = "none" | "follow_up_due" | "waiting_client" | "completed";
@@ -26,7 +26,7 @@ export function useAppointments() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("appointments")
-        .select("id, reference, service_type, appointment_date, appointment_time, occasion, event_date, notes, status, created_at, production_stage, follow_up_status, follow_up_notes, customers(full_name, phone, email)")
+        .select("id, reference, service_type, appointment_date, appointment_time, occasion, event_date, notes, status, created_at, production_stage, follow_up_status, follow_up_notes, reminder_sent_at, customers(full_name, phone, email)")
         .order("appointment_date").order("appointment_time");
       if (error) throw error;
       return data as unknown as OwnerAppointment[];
