@@ -8,6 +8,7 @@ import { TextField, LongTextField } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { services, serviceTitle, occasions, slotsFor, formatTime, toISODate, detailsSchema, errorMessages, type Details, type ServiceId } from "@/lib/booking";
+import { sendBookingEmails } from "@/lib/notify.functions";
 
 export const Route = createFileRoute("/_public/book")({
   head: () => ({ meta: [
@@ -80,6 +81,8 @@ function BookPage() {
       return;
     }
     setReference(data as string);
+    // Fire-and-forget: email problems never affect the booking.
+    sendBookingEmails({ data: { reference: data as string, phone: parsed.phone } }).catch((e) => console.warn("Booking email not sent", e));
   }
 
   if (reference && service && date && time) return <Confirmation reference={reference} service={service} date={date} time={time} name={details.fullName} phone={details.phone} />;
