@@ -9,3 +9,7 @@
 - [x] Keep the three homepage categories; remove numbering, arrows, and rigid tile framing.
 - [x] Remove the homepage location icon and use editorial text and subtle dividers.
 - [x] Check the homepage across screen sizes without changing routes or owner workflows.
+
+# Stage 3 — booking
+- [x] Bookings saved in Lovable Cloud (customers, appointments), pending + slot held
+- [x] 4-step /book flow with confirmation and reference
