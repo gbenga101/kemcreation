@@ -49,7 +49,7 @@ function BookPage() {
   const now = new Date();
   const slots = date ? slotsFor(date).filter((t) => {
     if (toISODate(date) !== toISODate(now)) return true;
-    const [h, m] = t.split(":").map(Number);
+    const [h = 0, m = 0] = t.split(":").map(Number);
     return h * 60 + m > now.getHours() * 60 + now.getMinutes();
   }) : [];
 
@@ -73,7 +73,7 @@ function BookPage() {
     setSubmitting(false);
     if (error) {
       const key = Object.keys(errorMessages).find((k) => error.message.includes(k));
-      setSubmitError(key ? errorMessages[key] : "Something went wrong and your request was not sent. Please try again.");
+      setSubmitError((key && errorMessages[key]) || "Something went wrong and your request was not sent. Please try again.");
       if (key === "slot_taken" || key === "invalid_date") { setTime(null); void loadBooked(date); }
       return;
     }
