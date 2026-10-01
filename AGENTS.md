@@ -8,3 +8,8 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Kem's Creation architecture
+- Keep the public experience in its own shared shell and the owner experience under `/owner`; this separates customer discovery from operational workflows.
+- Treat the owner area as an explicitly non-operational Stage 1 preview until authentication and persistent records are introduced; a public route must never expose real customer information.
+- Centralize temporary visual tokens in `src/styles.css` and reusable controls under `src/components`; this keeps future brand replacement and later booking stages localized.
