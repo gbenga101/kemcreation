@@ -35,6 +35,10 @@ function AboutPage() {
           <p className="font-display text-lg font-semibold">Outside Badagry?</p>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">We deliver anywhere across Lagos State.</p>
         </div>
+        <div className="mt-8 overflow-hidden rounded-lg border border-border">
+          <iframe title="Map of Badagry, Lagos State" src="https://www.google.com/maps?q=Badagry,+Lagos+State,+Nigeria&z=13&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="aspect-[4/3] w-full border-0" />
+        </div>
+        <Button asChild variant="outline" className="mt-4"><a href="https://www.google.com/maps/dir/?api=1&destination=Badagry,+Lagos+State,+Nigeria" target="_blank" rel="noopener noreferrer">Get Directions on Google Maps</a></Button>
       </div>
       <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-accent">Opening hours</p>
