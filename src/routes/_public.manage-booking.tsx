@@ -73,7 +73,6 @@ function ManagePage() {
 
   // Returning from Paystack: confirm the payment against Paystack's API before trusting it.
   useEffect(() => {
-    console.info("[verify-debug]", { paid: search.paid, hasBooking: !!booking, verified: verified.current });
     if (!search.paid || !booking || verified.current) return;
     verified.current = true;
     void (async () => {
