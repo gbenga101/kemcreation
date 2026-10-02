@@ -18,12 +18,10 @@ type Search = { ref?: string | undefined; phone?: string | undefined; paid?: str
 
 export const Route = createFileRoute("/_public/manage-booking")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-
-      ref: typeof s["ref"] === "string" ? s["ref"] : undefined,
-      phone: typeof s["phone"] === "string" ? s["phone"] : s["phone"] != null ? String(s["phone"]) : undefined,
-      paid: typeof s["paid"] === "string" ? s["paid"] : undefined,
-    };
-  },
+    ref: typeof s["ref"] === "string" ? s["ref"] : undefined,
+    phone: typeof s["phone"] === "string" ? s["phone"] : s["phone"] != null ? String(s["phone"]) : undefined,
+    paid: typeof s["paid"] === "string" ? s["paid"] : undefined,
+  }),
   head: () => ({ meta: [
     { title: "Manage your booking | Kem's Creation" },
     { name: "description", content: "Check, reschedule or cancel your Kem's Creation appointment using your booking reference." },
