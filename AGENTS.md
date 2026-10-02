@@ -17,3 +17,4 @@
 - Blocked availability lives in `blocked_slots` and is enforced inside `get_booked_slots`/`create_booking` — the public calendar and the database agree on what is bookable.
 - Visit reminders run from one shared server routine (`runReminders`) invoked by a daily cron hook route and an owner-only server function; `reminder_sent_at` guarantees at most one reminder per appointment.
 - Deposits are recorded as `payment_status` (`not_required` → `pending` → `paid`) and only flipped to `paid` after server-side Paystack verification (signed webhook or verify API) — the Paystack redirect page alone is never trusted; the Paystack key stays server-only in `payments.functions.ts` and the webhook route.
+- Query flags that must survive a page load use non-numeric values (e.g. `paid=return`, never `paid=1`): the URL parser converts numeric-looking values to numbers during SSR, which silently drops the flag and rewrites the URL before the route's `validateSearch` sees it.
