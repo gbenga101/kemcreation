@@ -228,7 +228,7 @@ function Row({ label, value, edit }: { label: string; value: string; edit: () =>
   </div>;
 }
 
-function Confirmation({ reference, service, date, time, name, phone }: { reference: string; service: string; date: Date; time: string; name: string; phone: string }) {
+function Confirmation({ reference, service, date, time, name, phone, payChoice, depositFailed }: { reference: string; service: string; date: Date; time: string; name: string; phone: string; payChoice: "studio" | "online"; depositFailed: boolean }) {
   return <section className="mx-auto max-w-2xl px-5 py-16 sm:px-8 lg:py-24">
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Request received</p>
     <h1 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-4xl">Thank you, {name.split(" ")[0]}.</h1>
