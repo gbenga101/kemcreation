@@ -95,7 +95,12 @@ function BookPage() {
     // A payment problem never blocks the booking: it still saves and shows the reference.
     if (payChoice === "online") {
       const r = await initDeposit({ data: { reference: ref, email: payEmailToUse, origin: window.location.origin } });
-      if (r.ok && typeof r.authorizationUrl === "string") { window.location.assign(r.authorizationUrl); return; }
+      if (r.ok && typeof r.authorizationUrl === "string") {
+        // Send the owner alert before navigating away to Paystack's checkout.
+        await sendBookingEmails({ data: { reference: ref, phone: parsed.phone } }).catch(() => {});
+        window.location.assign(r.authorizationUrl);
+        return;
+      }
       setDepositFailed(true);
     }
     setReference(ref);
