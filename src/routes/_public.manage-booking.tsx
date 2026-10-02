@@ -262,3 +262,29 @@ function RescheduleDialog({ open, onOpenChange, creds, current, onDone }: { open
     </DialogContent>
   </Dialog>;
 }
+
+function DepositPay({ reference, onChanged }: { reference: string; onChanged: (m: string) => void }) {
+  const [email, setEmail] = useState("");
+  const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function pay() {
+    if (!/^\S+@\S+\.\S+$/.test(email)) { setErr("Please enter a valid email address."); return; }
+    setBusy(true); setErr(null);
+    const r = await initDeposit({ data: { reference, email, origin: window.location.origin } });
+    if (r.ok && typeof r.authorizationUrl === "string") { window.location.assign(r.authorizationUrl); return; }
+    setBusy(false);
+    if (r.ok) {
+      const v = await verifyDeposit({ data: { reference } });
+      if (v.paid) onChanged("Payment confirmed — thank you! Your deposit has been received.");
+      else setErr("We couldn't confirm the payment. Please refresh this page in a moment.");
+    } else {
+      setErr("We couldn't start the payment. Please try again or pay at the studio.");
+    }
+  }
+
+  return <div className="mt-3">
+    <TextField id="deposit-pay-email" label="Email for the payment receipt" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(null); }} error={err ?? undefined} />
+    <Button className="mt-4" size="lg" onClick={pay} disabled={busy}>{busy ? "Starting…" : `Pay Deposit Online (${DEPOSIT.label} — Test Mode)`}</Button>
+  </div>;
+}
