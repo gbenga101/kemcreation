@@ -41,7 +41,7 @@ export const initDeposit = createServerFn({ method: "POST" })
           amount: DEPOSIT.kobo,
           currency: "NGN",
           reference: a.reference,
-          callback_url: `${data.origin}/manage-booking?ref=${encodeURIComponent(a.reference as string)}&phone=${encodeURIComponent(c?.phone ?? "")}&paid=1`,
+          callback_url: `${data.origin}/manage-booking?ref=${encodeURIComponent(a.reference as string)}&phone=${encodeURIComponent(c?.phone ?? "")}&paid=return`,
           metadata: { booking_reference: a.reference, customer_name: c?.full_name ?? "" },
         }),
       });
