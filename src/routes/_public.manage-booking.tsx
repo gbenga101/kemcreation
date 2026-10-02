@@ -14,13 +14,13 @@ import { cn } from "@/lib/utils";
 import { serviceTitle, slotsFor, formatTime, toISODate, errorMessages, DEPOSIT } from "@/lib/booking";
 import { initDeposit, verifyDeposit } from "@/lib/payments.functions";
 
-type Search = { ref?: string | undefined; phone?: string | undefined; paid?: true | undefined };
+type Search = { ref?: string | undefined; phone?: string | undefined; paid?: string | undefined };
 
 export const Route = createFileRoute("/_public/manage-booking")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     ref: typeof s["ref"] === "string" ? s["ref"] : undefined,
     phone: typeof s["phone"] === "string" ? s["phone"] : s["phone"] != null ? String(s["phone"]) : undefined,
-    paid: s["paid"] === "1" ? true : undefined,
+    paid: typeof s["paid"] === "string" ? s["paid"] : undefined,
   }),
   head: () => ({ meta: [
     { title: "Manage your booking | Kem's Creation" },
