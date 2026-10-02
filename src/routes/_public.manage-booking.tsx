@@ -165,7 +165,7 @@ function Details({ booking: b, creds, notice, onChanged, onReset }: { booking: B
       <p className="font-semibold">Deposit — {DEPOSIT.label} (demo amount)</p>
       <p className="text-muted-foreground">A deposit holds your appointment once it is confirmed. {DEPOSIT.demoNote}</p>
       <DepositPay reference={b.reference} onChanged={onChanged} />
-    </div>
+    </div>}
 
     <div className="flex flex-wrap items-center gap-4 border-t border-border pt-6">
       <Button variant="outline" size="lg" disabled={closed} onClick={() => setResOpen(true)}><CalendarDays aria-hidden className="size-4" />Reschedule Appointment</Button>
