@@ -157,7 +157,7 @@ function Details({ booking: b, creds, notice, onChanged, onReset }: { booking: B
 
     <div className="border-l-2 border-accent bg-surface p-4 text-sm leading-6">
       <p className="font-semibold">Studio visit</p>
-      <p className="text-muted-foreground">Our studio is in Badagry, Lagos State. Delivery is available across Lagos.</p>
+      <p className="text-muted-foreground">Our studio is at 18, First Ola-Oki Street, Ibereko, Olorunda LCDA, Badagry, Lagos 103101, Lagos State. Delivery is available across Lagos.</p>
       <p className="mt-3 text-muted-foreground">For custom fittings and measurements, please arrive 5–10 minutes before your slot. Bring any preferred inspiration fabrics or style references.</p>
     </div>
 

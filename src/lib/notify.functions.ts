@@ -100,7 +100,7 @@ export const sendBookingEmails = createServerFn({ method: "POST" })
           await send(c.email, `We received your booking request ${a.reference}`,
             layout(`Thank you, ${c.full_name.split(" ")[0]}`, rows.filter(([k]) => !["Phone", "Email"].includes(k)),
               "Your request has been received and is <strong>pending</strong> until Kem's Creation confirms it.",
-              "We'll contact you on WhatsApp or by phone to confirm. The studio address and arrival details will be shared with your confirmation. Keep your booking reference handy if you need to make changes."),
+              "We'll contact you on WhatsApp or by phone to confirm. The studio is at 18, First Ola-Oki Street, Ibereko, Olorunda LCDA, Badagry, Lagos 103101, Lagos State. Keep your booking reference handy if you need to make changes."),
             `customer-${a.reference}`);
           result.customer = true;
         } catch (e) { console.error("[booking-email] customer confirmation failed", e); }
