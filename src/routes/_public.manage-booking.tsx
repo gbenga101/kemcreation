@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_public/manage-booking")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     ref: typeof s["ref"] === "string" ? s["ref"] : undefined,
     phone: typeof s["phone"] === "string" ? s["phone"] : s["phone"] != null ? String(s["phone"]) : undefined,
-    paid: typeof s["paid"] === "string" ? s["paid"] : undefined,
+    paid: s["paid"] != null ? String(s["paid"]) : undefined,
   }),
   head: () => ({ meta: [
     { title: "Manage your booking | Kem's Creation" },
@@ -73,7 +73,6 @@ function ManagePage() {
 
   // Returning from Paystack: confirm the payment against Paystack's API before trusting it.
   useEffect(() => {
-    console.info("[verify-debug]", JSON.stringify({ paid: search.paid, hasBooking: !!booking, verified: verified.current }));
     if (!search.paid || !booking || verified.current) return;
     verified.current = true;
     void (async () => {
