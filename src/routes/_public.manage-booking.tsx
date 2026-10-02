@@ -17,7 +17,7 @@ import { initDeposit, verifyDeposit } from "@/lib/payments.functions";
 type Search = { ref?: string | undefined; phone?: string | undefined; paid?: string | undefined };
 
 export const Route = createFileRoute("/_public/manage-booking")({
-  validateSearch: (s: Record<string, unknown>): Search => ({
+  validateSearch: (s: Record<string, unknown>): Search => (console.info("[validate]", JSON.stringify(s)), ({
     ref: typeof s["ref"] === "string" ? s["ref"] : undefined,
     phone: typeof s["phone"] === "string" ? s["phone"] : s["phone"] != null ? String(s["phone"]) : undefined,
     paid: typeof s["paid"] === "string" ? s["paid"] : undefined,
