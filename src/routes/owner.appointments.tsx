@@ -4,9 +4,9 @@ import { ReminderCheckButton } from "@/components/reminder-check";
 import { lagosToday, needsFollowUp, useAppointments, type DbStatus } from "@/lib/owner";
 import { cn } from "@/lib/utils";
 
-type F = "all" | "deadlines" | "follow_up" | DbStatus;
+type F = "all" | "deadlines" | "follow_up" | "paid_deposit" | DbStatus;
 const filters: { id: F; label: string }[] = [
-  { id: "all", label: "All" }, { id: "follow_up", label: "Needs Follow-Up" }, { id: "deadlines", label: "Upcoming Event Deadlines" }, { id: "pending", label: "Pending" }, { id: "confirmed", label: "Confirmed" }, { id: "completed", label: "Completed" }, { id: "cancelled", label: "Cancelled" },
+  { id: "all", label: "All" }, { id: "follow_up", label: "Needs Follow-Up" }, { id: "deadlines", label: "Upcoming Event Deadlines" }, { id: "pending", label: "Pending" }, { id: "confirmed", label: "Confirmed" }, { id: "completed", label: "Completed" }, { id: "cancelled", label: "Cancelled" }, { id: "paid_deposit", label: "Paid Deposits" },
 ];
 
 export const Route = createFileRoute("/owner/appointments")({
@@ -32,6 +32,7 @@ function AppointmentsPage() {
   const list = filter === "all" ? data
     : filter === "follow_up" ? data.filter(needsFollowUp)
     : filter === "deadlines" ? data.filter((a) => a.event_date && a.event_date >= today && !["cancelled", "no_show"].includes(a.status)).sort((x, y) => x.event_date!.localeCompare(y.event_date!))
+    : filter === "paid_deposit" ? data.filter((a) => a.payment_status === "paid")
     : data.filter((a) => a.status === filter);
   return <>
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Owner / Appointments</p>

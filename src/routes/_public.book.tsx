@@ -7,8 +7,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { TextField, LongTextField } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { services, serviceTitle, occasions, slotsFor, formatTime, toISODate, detailsSchema, errorMessages, type Details, type ServiceId } from "@/lib/booking";
+import { services, serviceTitle, occasions, slotsFor, formatTime, toISODate, detailsSchema, errorMessages, DEPOSIT, type Details, type ServiceId } from "@/lib/booking";
 import { sendBookingEmails } from "@/lib/notify.functions";
+import { initDeposit } from "@/lib/payments.functions";
+import { z } from "zod";
 
 export const Route = createFileRoute("/_public/book")({
   head: () => ({ meta: [
@@ -38,6 +40,10 @@ function BookPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
+  const [payChoice, setPayChoice] = useState<"studio" | "online">("studio");
+  const [payEmail, setPayEmail] = useState("");
+  const [payError, setPayError] = useState<string | null>(null);
+  const [depositFailed, setDepositFailed] = useState(false);
 
   async function loadBooked(d: Date) {
     setLoadingSlots(true);
@@ -67,6 +73,11 @@ function BookPage() {
 
   async function submit() {
     if (!service || !date || !time) return;
+    const payEmailToUse = details.email || payEmail;
+    if (payChoice === "online") {
+      if (!payEmailToUse) { setPayError("An email address is needed to take the payment."); return; }
+      if (!z.string().email().safeParse(payEmailToUse).success) { setPayError("Please enter a valid email address."); return; }
+    }
     const parsed = detailsSchema.parse(details);
     setSubmitting(true); setSubmitError(null);
     const { data, error } = await supabase.rpc("create_booking", {
@@ -80,12 +91,24 @@ function BookPage() {
       if (key === "slot_taken" || key === "invalid_date") { setTime(null); void loadBooked(date); }
       return;
     }
-    setReference(data as string);
+    const ref = data as string;
+    // A payment problem never blocks the booking: it still saves and shows the reference.
+    if (payChoice === "online") {
+      const r = await initDeposit({ data: { reference: ref, email: payEmailToUse, origin: window.location.origin } });
+      if (r.ok && typeof r.authorizationUrl === "string") {
+        // Send the owner alert before navigating away to Paystack's checkout.
+        await sendBookingEmails({ data: { reference: ref, phone: parsed.phone } }).catch(() => {});
+        window.location.assign(r.authorizationUrl);
+        return;
+      }
+      setDepositFailed(true);
+    }
+    setReference(ref);
     // Fire-and-forget: email problems never affect the booking.
-    sendBookingEmails({ data: { reference: data as string, phone: parsed.phone } }).catch((e) => console.warn("Booking email not sent", e));
+    sendBookingEmails({ data: { reference: ref, phone: parsed.phone } }).catch((e) => console.warn("Booking email not sent", e));
   }
 
-  if (reference && service && date && time) return <Confirmation reference={reference} service={service} date={date} time={time} name={details.fullName} phone={details.phone} />;
+  if (reference && service && date && time) return <Confirmation reference={reference} service={service} date={date} time={time} name={details.fullName} phone={details.phone} payChoice={payChoice} depositFailed={depositFailed} />;
 
   const set = (k: keyof Details) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setDetails({ ...details, [k]: e.target.value });
 
@@ -170,6 +193,25 @@ function BookPage() {
           <p className="font-semibold">Location</p>
           <p className="text-muted-foreground">Our studio is in Badagry, Lagos. The exact address and arrival details will be shared when Kem's Creation confirms your appointment.</p>
         </div>
+        <div className="mt-4 border-l-2 border-accent bg-surface p-4 text-sm leading-6">
+          <p className="font-semibold">Consultation deposit — {DEPOSIT.label}</p>
+          <p className="text-muted-foreground">A deposit holds your appointment once it is confirmed. {DEPOSIT.demoNote}</p>
+          <fieldset className="mt-3 space-y-1">
+            <legend className="sr-only">How would you like to pay the deposit?</legend>
+            <label className="flex min-h-11 items-center gap-3">
+              <input type="radio" name="deposit" value="studio" checked={payChoice === "studio"} onChange={() => setPayChoice("studio")} className="size-4" />
+              <span>Pay the deposit at the studio</span>
+            </label>
+            <label className="flex min-h-11 items-center gap-3">
+              <input type="radio" name="deposit" value="online" checked={payChoice === "online"} onChange={() => setPayChoice("online")} className="size-4" />
+              <span>Pay the deposit online now (test payment — no real money will be charged)</span>
+            </label>
+          </fieldset>
+          {payChoice === "online" && !details.email.trim() && <div className="mt-2 max-w-sm">
+            <TextField id="depositEmail" label="Email for the payment receipt" type="email" autoComplete="email" value={payEmail} onChange={(e) => { setPayEmail(e.target.value); setPayError(null); }} error={payError ?? undefined} />
+          </div>}
+          {payChoice === "online" && details.email.trim() && payError && <p role="alert" className="mt-2 text-destructive">{payError}</p>}
+        </div>
         {submitError && <p role="alert" className="mt-5 rounded-sm border border-destructive/40 p-3 text-sm text-destructive">{submitError}</p>}
       </div>}
     </div>
@@ -191,7 +233,7 @@ function Row({ label, value, edit }: { label: string; value: string; edit: () =>
   </div>;
 }
 
-function Confirmation({ reference, service, date, time, name, phone }: { reference: string; service: string; date: Date; time: string; name: string; phone: string }) {
+function Confirmation({ reference, service, date, time, name, phone, payChoice, depositFailed }: { reference: string; service: string; date: Date; time: string; name: string; phone: string; payChoice: "studio" | "online"; depositFailed: boolean }) {
   return <section className="mx-auto max-w-2xl px-5 py-16 sm:px-8 lg:py-24">
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Request received</p>
     <h1 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-4xl">Thank you, {name.split(" ")[0]}.</h1>
@@ -205,6 +247,8 @@ function Confirmation({ reference, service, date, time, name, phone }: { referen
         <div><dt className="text-muted-foreground">Phone</dt><dd className="mt-1 font-medium">{phone}</dd></div>
       </dl>
     </div>
+    {depositFailed && <p className="mt-4 border-l-2 border-accent bg-surface p-4 text-sm">We couldn't start the online payment. Your booking is saved — you can pay the {DEPOSIT.label} (demo amount) deposit at the studio or from the Manage your booking page.</p>}
+    {payChoice === "studio" && !depositFailed && <p className="mt-4 border-l-2 border-accent bg-surface p-4 text-sm"><strong className="font-semibold">Deposit: {DEPOSIT.label} (demo amount)</strong> — due at the studio when you visit.</p>}
     <h2 className="mt-10 font-display text-xl font-semibold">What happens next</h2>
     <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
       <li>Kem's Creation will contact you on WhatsApp or by phone to confirm your appointment.</li>

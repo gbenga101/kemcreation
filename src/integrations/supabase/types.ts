@@ -191,6 +191,7 @@ export type Database = {
           full_name: string
           notes: string
           occasion: string
+          payment_status: string
           production_stage: string
           reference: string
           service_type: string

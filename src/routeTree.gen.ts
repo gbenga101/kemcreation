@@ -22,6 +22,7 @@ import { Route as OwnerAppointmentsRouteImport } from './routes/owner.appointmen
 import { Route as OwnerAvailabilityRouteImport } from './routes/owner.availability'
 import { Route as OwnerLoginRouteImport } from './routes/owner_.login'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
+import { Route as ApiPublicWebhooksPaystackRouteImport } from './routes/api/public/webhooks/paystack'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -88,6 +89,12 @@ const ApiPublicHooksSendRemindersRoute =
     path: '/api/public/hooks/send-reminders',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWebhooksPaystackRoute =
+  ApiPublicWebhooksPaystackRouteImport.update({
+    id: '/api/public/webhooks/paystack',
+    path: '/api/public/webhooks/paystack',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/owner/login': typeof OwnerLoginRoute
   '/owner/': typeof OwnerIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
+  '/api/public/webhooks/paystack': typeof ApiPublicWebhooksPaystackRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof PublicAboutRoute
@@ -115,6 +123,7 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/owner': typeof OwnerIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
+  '/api/public/webhooks/paystack': typeof ApiPublicWebhooksPaystackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,6 +140,7 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/owner/': typeof OwnerIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
+  '/api/public/webhooks/paystack': typeof ApiPublicWebhooksPaystackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/owner/login'
     | '/owner/'
     | '/api/public/hooks/send-reminders'
+    | '/api/public/webhooks/paystack'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/'
     | '/owner'
     | '/api/public/hooks/send-reminders'
+    | '/api/public/webhooks/paystack'
   id:
     | '__root__'
     | '/_public'
@@ -175,6 +187,7 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/owner/'
     | '/api/public/hooks/send-reminders'
+    | '/api/public/webhooks/paystack'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,6 +195,7 @@ export interface RootRouteChildren {
   OwnerRoute: typeof OwnerRouteWithChildren
   OwnerLoginRoute: typeof OwnerLoginRoute
   ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
+  ApiPublicWebhooksPaystackRoute: typeof ApiPublicWebhooksPaystackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -277,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksSendRemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/webhooks/paystack': {
+      id: '/api/public/webhooks/paystack'
+      path: '/api/public/webhooks/paystack'
+      fullPath: '/api/public/webhooks/paystack'
+      preLoaderRoute: typeof ApiPublicWebhooksPaystackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -320,6 +341,7 @@ const rootRouteChildren: RootRouteChildren = {
   OwnerRoute: OwnerRouteWithChildren,
   OwnerLoginRoute: OwnerLoginRoute,
   ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
+  ApiPublicWebhooksPaystackRoute: ApiPublicWebhooksPaystackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

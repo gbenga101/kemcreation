@@ -4,7 +4,7 @@ import { AppointmentStatusBadge } from "@/components/ui/appointment-status";
 import { EventUrgencyBadge, StageStepper, stagesFor } from "@/components/production";
 import { FollowUpBadge, FollowUpPanel } from "@/components/follow-up";
 import { serviceTitle, formatTime } from "@/lib/booking";
-import { addDaysISO, badgeStatus, lagosToday, prettyDate, useSetStage, useSetStatus, whatsappLink, type DbStatus, type OwnerAppointment } from "@/lib/owner";
+import { addDaysISO, badgeStatus, lagosToday, paymentLabel, prettyDate, useSetStage, useSetStatus, whatsappLink, type DbStatus, type OwnerAppointment } from "@/lib/owner";
 
 const nextActions: Partial<Record<DbStatus, { status: DbStatus; label: string; variant?: "outline" }[]>> = {
   pending: [{ status: "confirmed", label: "Confirm appointment" }, { status: "cancelled", label: "Decline / Cancel", variant: "outline" }],
@@ -32,6 +32,7 @@ export function OwnerAppointmentCard({ a, compact = false }: { a: OwnerAppointme
       {a.event_date && <div><dt className="text-xs uppercase tracking-widest text-muted-foreground">Event date</dt><dd>{prettyDate(a.event_date)}</dd></div>}
       {!compact && c?.email && <div><dt className="text-xs uppercase tracking-widest text-muted-foreground">Email</dt><dd className="break-all">{c.email}</dd></div>}
       <div><dt className="text-xs uppercase tracking-widest text-muted-foreground">Reference</dt><dd>{a.reference}</dd></div>
+      <div><dt className="text-xs uppercase tracking-widest text-muted-foreground">Deposit</dt><dd>{paymentLabel(a.payment_status)}</dd></div>
     </dl>
     {!compact && a.notes && <p className="mt-4 border-l-2 border-accent bg-surface p-3 text-sm leading-6">{a.notes}</p>}
     {showStage && <div className="mt-5 border-t border-border pt-4">
