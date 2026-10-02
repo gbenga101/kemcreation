@@ -191,7 +191,7 @@ function BookPage() {
         </dl>
         <div className="mt-6 border-l-2 border-accent bg-surface p-4 text-sm leading-6">
           <p className="font-semibold">Location</p>
-          <p className="text-muted-foreground">Our studio is in Badagry, Lagos. The exact address and arrival details will be shared when Kem's Creation confirms your appointment.</p>
+          <p className="text-muted-foreground">Our studio is at 18, First Ola-Oki Street, Ibereko, Olorunda LCDA, Badagry, Lagos 103101. Arrival details will be shared when Kem's Creation confirms your appointment.</p>
         </div>
         <div className="mt-4 border-l-2 border-accent bg-surface p-4 text-sm leading-6">
           <p className="font-semibold">Consultation deposit — {DEPOSIT.label}</p>
@@ -252,7 +252,7 @@ function Confirmation({ reference, service, date, time, name, phone, payChoice, 
     <h2 className="mt-10 font-display text-xl font-semibold">What happens next</h2>
     <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
       <li>Kem's Creation will contact you on WhatsApp or by phone to confirm your appointment.</li>
-      <li>The studio address and arrival details will be shared with your confirmation.</li>
+      <li>Visit the studio at 18, First Ola-Oki Street, Ibereko, Olorunda LCDA, Badagry, Lagos 103101.</li>
       <li>Bring any inspiration photos, fabric or event details that will help.</li>
       <li>Keep your booking reference handy in case you need to make changes.</li>
     </ol>

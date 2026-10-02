@@ -30,15 +30,17 @@ function AboutPage() {
       <div>
         <span className="inline-block rounded-sm bg-secondary px-2.5 py-1 text-xs font-medium">Studio in Badagry, Lagos State</span>
         <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">Visiting the studio</h2>
-        <p className="mt-4 max-w-md text-base leading-7 text-muted-foreground">The exact studio address and arrival directions are shared when your appointment is confirmed, so each consultation stays dedicated and uninterrupted.</p>
+        <p className="mt-4 max-w-md text-base leading-7 text-muted-foreground">Visit the studio for fittings and consultations at:</p>
+        <p className="mt-2 max-w-md font-medium text-foreground">18, First Ola-Oki Street, Ibereko, Olorunda LCDA, Badagry, Lagos 103101, Lagos State</p>
+        <a href="tel:+2348101067305" className="mt-3 inline-block text-sm font-medium text-accent underline underline-offset-4 hover:text-foreground">+234 810 106 7305</a>
         <div className="mt-8 border-l-2 border-accent bg-surface px-5 py-4">
           <p className="font-display text-lg font-semibold">Outside Badagry?</p>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">We deliver anywhere across Lagos State.</p>
         </div>
         <div className="mt-8 overflow-hidden rounded-lg border border-border">
-          <iframe title="Map of Badagry, Lagos State" src="https://www.google.com/maps?q=Badagry,+Lagos+State,+Nigeria&z=13&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="aspect-[4/3] w-full border-0" />
+          <iframe title="Map of 18 First Ola-Oki Street, Ibereko, Badagry" src="https://www.google.com/maps?q=18%20First%20Ola-Oki%20Street%2C%20Ibereko%2C%20Badagry%2C%20Lagos&z=15&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="aspect-[4/3] w-full border-0" />
         </div>
-        <Button asChild variant="outline" className="mt-4"><a href="https://www.google.com/maps/dir/?api=1&destination=Badagry,+Lagos+State,+Nigeria" target="_blank" rel="noopener noreferrer">Get Directions on Google Maps</a></Button>
+        <Button asChild variant="outline" className="mt-4"><a href="https://www.google.com/maps/dir/?api=1&destination=18%20First%20Ola-Oki%20Street%2C%20Ibereko%2C%20Badagry%2C%20Lagos" target="_blank" rel="noopener noreferrer">Get Directions on Google Maps</a></Button>
       </div>
       <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-accent">Opening hours</p>
