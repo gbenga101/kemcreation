@@ -10,6 +10,14 @@ export const serviceTitle = (id: string) => services.find((s) => s.id === id)?.t
 
 export const occasions = ["Wedding", "Birthday", "Corporate", "Sunday Best", "Everyday", "Other"];
 
+/** Consultation deposit. The ₦5,000 is a demo amount — the real deposit hasn't been confirmed yet. */
+export const DEPOSIT = {
+  naira: 5000,
+  kobo: 500000,
+  label: "₦5,000",
+  demoNote: "The ₦5,000 is a demo amount — the real deposit hasn't been confirmed yet.",
+};
+
 /** Verified hours. Mon/Tue/Wed/Fri 9:00–18:00, Thu/Sat 10:30–18:30, Sun closed. 30-minute slots. */
 export function slotsFor(date: Date): string[] {
   const day = date.getDay();
