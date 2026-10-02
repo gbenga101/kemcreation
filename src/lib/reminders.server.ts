@@ -42,7 +42,7 @@ export async function runReminders(siteOrigin: string): Promise<ReminderResult> 
 <p style="margin:0;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#7a2a3a">Kem's Creation</p>
 <h1 style="margin:10px 0 14px;font-size:22px;color:#1c1917">See you tomorrow, ${esc(c.full_name.split(" ")[0])}</h1>
 <p style="margin:0 0 14px;font-size:14px;line-height:22px;color:#44403c">This is a friendly reminder of your <strong>${esc(SERVICES[a.service_type] ?? a.service_type)}</strong> appointment on <strong>${esc(fmtDate(a.appointment_date))} at ${esc(fmtTime(a.appointment_time))}</strong>.</p>
-<p style="margin:0 0 14px;font-size:14px;line-height:22px;color:#44403c">Our studio is in Badagry, Lagos State. Please arrive 5–10 minutes before your slot, and bring any preferred inspiration fabrics or style references.</p>
+<p style="margin:0 0 14px;font-size:14px;line-height:22px;color:#44403c">Our studio is at 18, First Ola-Oki Street, Ibereko, Olorunda LCDA, Badagry, Lagos 103101, Lagos State. Please arrive 5–10 minutes before your slot, and bring any preferred inspiration fabrics or style references.</p>
 <p style="margin:0 0 14px;font-size:14px;line-height:22px;color:#44403c">Reference: <strong>${esc(a.reference)}</strong></p>
 <p style="margin:20px 0 0"><a href="${esc(link)}" style="display:inline-block;background:#1c1917;color:#ffffff;padding:12px 20px;text-decoration:none;font-size:14px">Manage your booking</a></p>
 <p style="margin:28px 0 0;font-size:12px;color:#a8a29e">Kem's Creation · Badagry, Lagos State</p>
