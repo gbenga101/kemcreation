@@ -20,3 +20,9 @@
 - [x] Overview: summary, pending requests, today, upcoming
 - [x] Appointments list with filters and status actions
 - [x] Availability blocks hidden from /book
+
+# Stage 7 — Paystack test-mode deposit
+- [x] Deposit choice on the /book review step (₦5,000 demo amount; email required to pay online)
+- [x] Test checkout via Paystack; server-side verification before "paid" (webhook + verify fallback)
+- [x] Deposit status and pay-later option on Manage your booking; verify on return from Paystack
+- [x] Owner cards show deposit state; "Paid Deposits" filter on the Appointments tab
