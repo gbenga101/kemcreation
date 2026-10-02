@@ -11,14 +11,16 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { AppointmentStatusBadge } from "@/components/ui/appointment-status";
 import { StageStepper, stageLabel } from "@/components/production";
 import { cn } from "@/lib/utils";
-import { serviceTitle, slotsFor, formatTime, toISODate, errorMessages } from "@/lib/booking";
+import { serviceTitle, slotsFor, formatTime, toISODate, errorMessages, DEPOSIT } from "@/lib/booking";
+import { initDeposit, verifyDeposit } from "@/lib/payments.functions";
 
-type Search = { ref?: string | undefined; phone?: string | undefined };
+type Search = { ref?: string | undefined; phone?: string | undefined; paid?: true | undefined };
 
 export const Route = createFileRoute("/_public/manage-booking")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     ref: typeof s["ref"] === "string" ? s["ref"] : undefined,
     phone: typeof s["phone"] === "string" ? s["phone"] : s["phone"] != null ? String(s["phone"]) : undefined,
+    paid: s["paid"] === "1" ? true : undefined,
   }),
   head: () => ({ meta: [
     { title: "Manage your booking | Kem's Creation" },
@@ -30,7 +32,7 @@ export const Route = createFileRoute("/_public/manage-booking")({
   component: ManagePage,
 });
 
-type Booking = { reference: string; service_type: string; appointment_date: string; appointment_time: string; occasion: string | null; event_date: string | null; notes: string | null; status: string; full_name: string; production_stage: string };
+type Booking = { reference: string; service_type: string; appointment_date: string; appointment_time: string; occasion: string | null; event_date: string | null; notes: string | null; status: string; full_name: string; production_stage: string; payment_status: string };
 
 const badgeFor = (s: string) => {
   const map: Record<string, Parameters<typeof AppointmentStatusBadge>[0]["status"]> = {
@@ -52,6 +54,7 @@ function ManagePage() {
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const auto = useRef(false);
+  const verified = useRef(false);
 
   async function lookup(r: string, p: string) {
     const cleanRef = r.trim().toUpperCase(), cleanPhone = p.replace(/[\s-]/g, "");
@@ -67,6 +70,18 @@ function ManagePage() {
   useEffect(() => {
     if (!auto.current && search.ref && search.phone) { auto.current = true; void lookup(search.ref, search.phone); }
   }, [search.ref, search.phone]);
+
+  // Returning from Paystack: confirm the payment against Paystack's API before trusting it.
+  useEffect(() => {
+    if (!search.paid || !booking || verified.current) return;
+    verified.current = true;
+    void (async () => {
+      if (booking.payment_status === "paid") { setNotice("Payment confirmed — thank you! Your deposit has been received."); return; }
+      const r = await verifyDeposit({ data: { reference: booking.reference } });
+      if (r.paid) setNotice("Payment confirmed — thank you! Your deposit has been received.");
+      else setNotice("We couldn't confirm your payment yet. If you completed it just now, please refresh this page in a moment.");
+    })();
+  }, [booking, search.paid]);
 
   return <section className="mx-auto max-w-2xl px-5 py-14 sm:px-8 lg:py-20">
     <p className="text-xs font-semibold uppercase tracking-widest text-accent">Your appointment</p>
@@ -123,6 +138,7 @@ function Details({ booking: b, creds, notice, onChanged, onReset }: { booking: B
         <div className="sm:col-span-2"><dt className="text-muted-foreground">Date & time</dt><dd className="mt-1 font-medium">{prettyWhen(b.appointment_date, b.appointment_time)}</dd></div>
         {b.occasion && <div><dt className="text-muted-foreground">Occasion</dt><dd className="mt-1 font-medium">{b.occasion}</dd></div>}
         {b.event_date && <div><dt className="text-muted-foreground">Event date</dt><dd className="mt-1 font-medium">{format(new Date(`${b.event_date}T00:00`), "d MMMM yyyy")}</dd></div>}
+        <div><dt className="text-muted-foreground">Deposit</dt><dd className="mt-1 font-medium">{b.payment_status === "paid" ? `Paid (${DEPOSIT.label} demo amount)` : `Due — ${DEPOSIT.label} (demo amount)`}</dd></div>
         {b.notes && <div className="sm:col-span-2"><dt className="text-muted-foreground">Notes</dt><dd className="mt-1 whitespace-pre-line break-words">{b.notes}</dd></div>}
       </dl>
     </div>
@@ -143,6 +159,12 @@ function Details({ booking: b, creds, notice, onChanged, onReset }: { booking: B
       <p className="font-semibold">Studio visit</p>
       <p className="text-muted-foreground">Our studio is in Badagry, Lagos State. Delivery is available across Lagos.</p>
       <p className="mt-3 text-muted-foreground">For custom fittings and measurements, please arrive 5–10 minutes before your slot. Bring any preferred inspiration fabrics or style references.</p>
+    </div>
+
+    {!closed && b.payment_status !== "paid" && <div className="border-l-2 border-accent bg-surface p-4 text-sm leading-6">
+      <p className="font-semibold">Deposit — {DEPOSIT.label} (demo amount)</p>
+      <p className="text-muted-foreground">A deposit holds your appointment once it is confirmed. {DEPOSIT.demoNote}</p>
+      <DepositPay reference={b.reference} onChanged={onChanged} />
     </div>
 
     <div className="flex flex-wrap items-center gap-4 border-t border-border pt-6">
