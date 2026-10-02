@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import catReady from "@/assets/cat-ready.jpg";
 import catBespoke from "@/assets/cat-bespoke.jpg";
 import catOccasion from "@/assets/cat-occasion.jpg";
+import catNative from "@/assets/cat-native.jpg";
+import catCorporate from "@/assets/cat-corporate.jpg";
+import catGirls from "@/assets/cat-girls.jpg";
 
 export const Route = createFileRoute("/_public/clothing")({
   head: () => ({ meta: [
@@ -17,10 +20,10 @@ export const Route = createFileRoute("/_public/clothing")({
 const categories: { name: string; detail: string; img?: string }[] = [
   { name: "Ready-to-Wear", detail: "Effortless elegance and everyday statement silhouettes crafted for immediate comfort and refined daily styling.", img: catReady },
   { name: "Bespoke & Custom Tailoring", detail: "One-on-one tailored garments made to your exact measurements, fabric choice, and personal silhouette.", img: catBespoke },
-  { name: "Native & African Wear", detail: "Timeless traditional elegance featuring rich Ankara prints, intricate laces, and bespoke African styles for cultural pride." },
-  { name: "Female Corporate Wear", detail: "Sharp, contemporary blazers, bespoke trousers, and structured dresses designed for confidence in the workplace." },
+  { name: "Native & African Wear", detail: "Timeless traditional elegance featuring rich Ankara prints, intricate laces, and bespoke African styles for cultural pride.", img: catNative },
+  { name: "Female Corporate Wear", detail: "Sharp, contemporary blazers, bespoke trousers, and structured dresses designed for confidence in the workplace.", img: catCorporate },
   { name: "Occasion & Wedding Wear", detail: "Show-stopping gowns, bridal party outfits, and celebratory attire crafted to make milestone events unforgettable.", img: catOccasion },
-  { name: "Children's & Young Girls' Wear", detail: "Exquisitely tailored, playful, and comfortable traditional and occasion outfits for young girls." },
+  { name: "Children's & Young Girls' Wear", detail: "Exquisitely tailored, playful, and comfortable traditional and occasion outfits for young girls.", img: catGirls },
 ];
 
 function ClothingPage() {
@@ -42,7 +45,7 @@ function ClothingPage() {
           <Button asChild variant="outline" className="mt-5 self-start"><Link to="/book">Book Consultation / Fitting</Link></Button>
         </article>)}
       </div>
-      <p className="mt-10 text-xs text-muted-foreground">Illustrative images — not Kem's Creation garments. Categories without a photo are awaiting real images of Kem's work.</p>
+      <p className="mt-10 text-xs text-muted-foreground">Illustrative images — not Kem's Creation garments.</p>
     </section>
     <section className="bg-editorial text-editorial-foreground"><div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-5 py-14 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
       <h2 className="font-display text-3xl font-bold">Looking for a custom style not listed here?</h2>
