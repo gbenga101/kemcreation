@@ -10,14 +10,6 @@ export const serviceTitle = (id: string) => services.find((s) => s.id === id)?.t
 
 export const occasions = ["Wedding", "Birthday", "Corporate", "Sunday Best", "Everyday", "Other"];
 
-/** Verified studio contact details supplied by Kem. */
-export const STUDIO = {
-  address: "18, First Ola-Oki Street, Ibereko, Olorunda LCDA, Badagry, Lagos 103101, Lagos State",
-  shortAddress: "18 First Ola-Oki Street, Ibereko, Badagry, Lagos",
-  phoneDisplay: "+234 810 106 7305",
-  phoneTel: "+2348101067305",
-};
-
 /** Consultation deposit. The ₦5,000 is a demo amount — the real deposit hasn't been confirmed yet. */
 export const DEPOSIT = {
   naira: 5000,
