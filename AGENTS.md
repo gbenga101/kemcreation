@@ -16,3 +16,4 @@
 - Owner access is the `owner` role in `user_roles`; the first signed-in account claims it via `claim_owner()` and owner data is read with the browser client under RLS — keeps privileged access server-enforced without extra server functions.
 - Blocked availability lives in `blocked_slots` and is enforced inside `get_booked_slots`/`create_booking` — the public calendar and the database agree on what is bookable.
 - Visit reminders run from one shared server routine (`runReminders`) invoked by a daily cron hook route and an owner-only server function; `reminder_sent_at` guarantees at most one reminder per appointment.
+- Deposits are recorded as `payment_status` (`not_required` → `pending` → `paid`) and only flipped to `paid` after server-side Paystack verification (signed webhook or verify API) — the Paystack redirect page alone is never trusted; the Paystack key stays server-only in `payments.functions.ts` and the webhook route.
